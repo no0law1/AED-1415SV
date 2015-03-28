@@ -1,6 +1,8 @@
 package serie1;
 
 
+import mylibrary.Heap;
+
 public class Arrays {
 
     /**
@@ -29,26 +31,72 @@ public class Arrays {
                 j++;
             }
             else{
-                i++;
-                j++;
+                return 0;
             }
         }
 
 		return diff;
 	}
-	
-	public static int[] getTheKElementsNearestX(int[] v, int l, int r, int x, int k){
-		throw new UnsupportedOperationException();
-	}
-	
 
-	
-	public static int median(int[] v, int l, int r){
+    /**
+     *
+     * @param v array
+     * @param l begin of array to search
+     * @param r end of array to search
+     * @param x nearest to search
+     * @param k max number of elements
+     * @return
+     */
+	public static int[] getTheKElementsNearestX(int[] v, int l, int r, int x, int k){
+        if(v.length<1 || r<l || k==0){
+            return new int[0];
+        }
+        Heap.heapSort(v, v.length);     // O(n.lg(n))
+
+        int size = (k < v.length) ? k : v.length;
+        int[] finalResult = new int[size]; //k-1
+
+        int xIndex = findIndex(v, x);       // O(n)
+
+        int fill=0;
+        int left = xIndex-1, right = xIndex;
+        for (; fill<size;) {
+            if(left<=0){
+                finalResult[fill++] = v[right++];
+            }
+            else if(right>=v.length){
+                finalResult[fill++] = v[left--];
+            }
+            else {
+                if (Math.abs(v[left] - x) < Math.abs(v[right] - x)) {
+                    finalResult[fill++] = v[left--];
+                } else {
+                    finalResult[fill++] = v[right++];
+                }
+            }
+
+        }
+
+		return finalResult;
+	}
+
+    private static int findIndex(int[] v, int x) {
+        int xIndex;
+        for (xIndex = 0; xIndex < v.length; xIndex++) {
+            if(v[xIndex]==x){
+                return xIndex;
+            }
+        }
+        return xIndex-1;
+    }
+
+
+    public static int median(int[] v, int l, int r){
 		throw new UnsupportedOperationException();
 	}	
 	
 	 public static String greaterCommonPrefix( String[] v, int l, int r, String word) {
-         if(v.length<1 || r-l < 1){
+         if(v.length<1 || r<l){
              return null;
          }
 
