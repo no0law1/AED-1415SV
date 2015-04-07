@@ -11,4 +11,7 @@ out/
 vendor/
 target/
 
+# Big Files
+test/java/problemserie1/files/
+
 *.DS_Store

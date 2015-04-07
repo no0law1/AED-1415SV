@@ -13,33 +13,33 @@ public class Arrays {
      * @param elem2 Array number 2
      * @return The minimum difference between two Integers.
      */
-    public static int findMinDifference(int[] elem1, int[] elem2) {
-        if (elem1.length < 1 || elem2.length < 1) {
+	public static int findMinDifference(int[] elem1, int[] elem2) {
+        if(elem1.length<1 || elem2.length<1) {
             return -1;
         }
-
         int diff = Integer.MAX_VALUE;
-        int idx1 = 0, idx2 = 0;
+        int i=0, j=0;
 
-        while (idx1 < elem1.length && idx2 < elem2.length) {
-            if (elem1[idx1] == elem2[idx2]){
+        while(i<elem1.length && j<elem2.length){
+            if(Math.abs(elem1[i]-elem2[j])<diff){
+                diff = Math.abs(elem1[i]-elem2[j]);
+            }
+            if(elem1[i]<elem2[j]){
+                i++;
+            }
+            else if(elem1[i]>elem2[j]) {
+                j++;
+            }
+            else{
                 return 0;
-            }
-            int res = Math.abs(elem1[idx1] - elem2[idx2]);
-            if (res < diff) {
-                diff = res;
-            }
-            if (elem1[idx1] < elem2[idx2]) {
-                idx1++;
-            } else {
-                idx2++;
             }
         }
 
-        return diff;
-    }
+		return diff;
+	}
 
     /**
+     *
      * @param v array
      * @param l begin of array to search
      * @param r end of array to search
@@ -89,11 +89,11 @@ public class Arrays {
         //TODO: Implementation of Binary Search
         int xIndex;
         for (xIndex = 0; xIndex < v.length; xIndex++) {
-            if (v[xIndex] == x) {
+            if(v[xIndex]==x){       //TODO:
                 return xIndex;
             }
         }
-        return xIndex - 1;
+        return xIndex-1;
     }
 
 

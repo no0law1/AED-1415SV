@@ -79,6 +79,13 @@ public class Arrays {
         return finalResult;
     }
 
+<<<<<<< .merge_file_ONlfpD
+    private static int findIndex(int[] v, int x) {
+        //TODO: implement binary search
+        int xIndex;
+        for (xIndex = 0; xIndex < v.length; xIndex++) {
+            if (v[xIndex] == x) {
+=======
     /**
      *
      * @param v array
@@ -89,7 +96,8 @@ public class Arrays {
         //TODO: Implementation of Binary Search
         int xIndex;
         for (xIndex = 0; xIndex < v.length; xIndex++) {
-            if (v[xIndex] == x) {
+            if(v[xIndex]==x){       //TODO:
+>>>>>>> .merge_file_djFh99
                 return xIndex;
             }
         }
@@ -97,6 +105,32 @@ public class Arrays {
     }
 
 
+    public static int median(int[] v, int l, int r) {
+        throw new UnsupportedOperationException();
+    }
+
+    public static String greaterCommonPrefix(String[] v, int l, int r, String word) {
+        if (v.length < 1 || r < l) {
+            return null;
+        }
+
+<<<<<<< .merge_file_ONlfpD
+        String result = v[v.length - 1];
+        int size = l - r;
+        int equal = 0;
+        for (int i = size; i >= 0; i--) {
+            if (i > v.length) {
+                continue;
+            }
+            for (int j = 0; j < word.length() && j < v[i].length(); j++) {
+
+            }
+
+
+        }
+
+        return "";
+=======
     public static int median(int[] v, int l, int r){
 		throw new UnsupportedOperationException();
 	}
@@ -145,5 +179,6 @@ public class Arrays {
         }
 
         return null;
+>>>>>>> .merge_file_djFh99
     }
 }
