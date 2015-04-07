@@ -64,5 +64,15 @@ public class FindMinDifferenceTest {
 		diff = Arrays.findMinDifference(v2, v1);
 		assertEquals(2, diff);	
 	}
-	
+
+	@Test
+	public void findMinDifference_OnAnArraysWithRandomPositiveElementsAndDifferentLengths(){
+		int[] v1 = {1, 3, 5 ,7, 9, 18};
+		int[] v2 = {2, 4, 6 ,8, 10, 12, 14, 18};
+		int diff = Arrays.findMinDifference(v1, v2);
+		assertEquals(0, diff);
+		diff = Arrays.findMinDifference(v2, v1);
+		assertEquals(0, diff);
+	}
+
 }

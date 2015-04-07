@@ -1,4 +1,4 @@
-package mylibrary;
+package mylibrary.sort;
 
 /**
  * Created by Nuno on 27/03/2015.
