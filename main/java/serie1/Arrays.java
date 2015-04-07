@@ -13,33 +13,33 @@ public class Arrays {
      * @param elem2 Array number 2
      * @return The minimum difference between two Integers.
      */
-	public static int findMinDifference(int[] elem1, int[] elem2) {
-        if(elem1.length<1 || elem2.length<1) {
+    public static int findMinDifference(int[] elem1, int[] elem2) {
+        if (elem1.length < 1 || elem2.length < 1) {
             return -1;
         }
-        int diff = Integer.MAX_VALUE;
-        int i=0, j=0;
 
-        while(i<elem1.length && j<elem2.length){
-            if(Math.abs(elem1[i]-elem2[j])<diff){
-                diff = Math.abs(elem1[i]-elem2[j]);
-            }
-            if(elem1[i]<elem2[j]){
-                i++;
-            }
-            else if(elem1[i]>elem2[j]) {
-                j++;
-            }
-            else{
+        int diff = Integer.MAX_VALUE;
+        int idx1 = 0, idx2 = 0;
+
+        while (idx1 < elem1.length && idx2 < elem2.length) {
+            if (elem1[idx1] == elem2[idx2]){
                 return 0;
+            }
+            int res = Math.abs(elem1[idx1] - elem2[idx2]);
+            if (res < diff) {
+                diff = res;
+            }
+            if (elem1[idx1] < elem2[idx2]) {
+                idx1++;
+            } else {
+                idx2++;
             }
         }
 
-		return diff;
-	}
+        return diff;
+    }
 
     /**
-     *
      * @param v array
      * @param l begin of array to search
      * @param r end of array to search
@@ -47,8 +47,8 @@ public class Arrays {
      * @param k max number of elements
      * @return
      */
-	public static int[] getTheKElementsNearestX(int[] v, int l, int r, int x, int k){
-        if(v.length<1 || r<l || k==0){
+    public static int[] getTheKElementsNearestX(int[] v, int l, int r, int x, int k) {
+        if (v.length < 1 || r < l || k == 0) {
             return new int[0];
         }
         Heap.heapSort(v, v.length);     // O(n.lg(n))
@@ -58,16 +58,14 @@ public class Arrays {
 
         int xIndex = findIndex(v, x);       // O(n)
 
-        int fill=0;
-        int left = xIndex-1, right = xIndex;
-        for (; fill<size;) {
-            if(left<=0){
+        int fill = 0;
+        int left = xIndex - 1, right = xIndex;
+        for (; fill < size; ) {
+            if (left <= 0) {
                 finalResult[fill++] = v[right++];
-            }
-            else if(right>=v.length){
+            } else if (right >= v.length) {
                 finalResult[fill++] = v[left--];
-            }
-            else {
+            } else {
                 if (Math.abs(v[left] - x) < Math.abs(v[right] - x)) {
                     finalResult[fill++] = v[left--];
                 } else {
@@ -77,43 +75,44 @@ public class Arrays {
 
         }
 
-		return finalResult;
-	}
+        return finalResult;
+    }
 
     private static int findIndex(int[] v, int x) {
+        //TODO: implement binary search
         int xIndex;
         for (xIndex = 0; xIndex < v.length; xIndex++) {
-            if(v[xIndex]==x){
+            if (v[xIndex] == x) {
                 return xIndex;
             }
         }
-        return xIndex-1;
+        return xIndex - 1;
     }
 
 
-    public static int median(int[] v, int l, int r){
-		throw new UnsupportedOperationException();
-	}	
-	
-	 public static String greaterCommonPrefix( String[] v, int l, int r, String word) {
-         if(v.length<1 || r<l){
-             return null;
-         }
+    public static int median(int[] v, int l, int r) {
+        throw new UnsupportedOperationException();
+    }
 
-         String result = v[v.length-1];
-         int size = l-r;
-         int equal = 0;
-         for (int i = size; i >= 0; i--) {
-             if(i>v.length){
-                 continue;
-             }
-             for (int j = 0; j < word.length() && j < v[i].length(); j++) {
+    public static String greaterCommonPrefix(String[] v, int l, int r, String word) {
+        if (v.length < 1 || r < l) {
+            return null;
+        }
 
-             }
+        String result = v[v.length - 1];
+        int size = l - r;
+        int equal = 0;
+        for (int i = size; i >= 0; i--) {
+            if (i > v.length) {
+                continue;
+            }
+            for (int j = 0; j < word.length() && j < v[i].length(); j++) {
+
+            }
 
 
-         }
-         
-         return "";
+        }
+
+        return "";
     }
 }
