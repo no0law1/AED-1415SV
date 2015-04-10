@@ -11,6 +11,9 @@ out/
 vendor/
 target/
 
+# Sonar specific files
+.sonar/
+
 # Big Files
 test/java/problemserie1/files/
 
