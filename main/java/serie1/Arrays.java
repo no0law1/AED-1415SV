@@ -1,8 +1,10 @@
 package serie1;
 
 import mylibrary.sort.HeapInt;
+import mylibrary.sort.QuickSortInt;
 
 import java.util.Comparator;
+import java.util.Stack;
 
 public class Arrays {
 
@@ -79,8 +81,45 @@ public class Arrays {
         return result;
     }
 
+    /**
+     * Implementation O(n.lg(n))
+     *
+     * @param v
+     * @param l
+     * @param r
+     * @return
+     */
     public static int median(int[] v, int l, int r) {
-        throw new UnsupportedOperationException();
+//        HeapInt.sort(v, l, r);
+//        if ((r - l + 1) % 2 == 0) {
+//            return (v[r / 2] + v[(r / 2) + 1]) / 2;
+//        }
+//        return v[r / 2];
+
+        int i = l;
+        Stack<Integer> stack = new Stack<>();
+        stack.push(r);
+        stack.push(l);
+        while(i != (r-l)/2){
+            int left = stack.pop();
+            int right = stack.pop();
+            if(right <= left){
+                continue;
+            }
+            i = QuickSortInt.partition(v, left, right);
+
+            if (i-left > right-i){
+                stack.push(i-1);
+                stack.push(left);
+            }
+            stack.push(right);
+            stack.push(i+1);
+            if (i-left <= right-i){
+                stack.push(i-1);
+                stack.push(left);
+            }
+        }
+        return ((r - l + 1) % 2 == 0) ? (v[i]+v[i+1])/2 : v[i];
     }
 
     /**
