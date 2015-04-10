@@ -1,6 +1,8 @@
 package serie1;
 
-import mylibrary.sort.Heap;
+import mylibrary.sort.HeapInt;
+
+import java.util.Comparator;
 
 public class Arrays {
 
@@ -38,6 +40,18 @@ public class Arrays {
         return diff;
     }
 
+    private static class DiffComparator implements Comparator<Integer> {
+        private Integer x;
+        public DiffComparator(Integer x){
+            this.x = x;
+        }
+
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            return Math.abs(x - o1) - Math.abs(x - o2);
+        }
+    }
+
     /**
      * Implementation O(n.lg(n))
      *
@@ -46,88 +60,23 @@ public class Arrays {
      * @param r last position to search
      * @param x value to search
      * @param k number of elements to return
-     * @return array with the k x nearest values
+     * @return array with the k nearest x values
      */
     public static int[] getTheKElementsNearestX(int[] v, int l, int r, int x, int k) {
         if (v.length < 1 || r < l || k == 0) {
             return new int[0];
         }
 
-        //RC: claro que é para procurar entre l e r antes de ordenar, por isso precisamos de ordenar só entre l e r
-        Heap.heapSort(v, l, r);     //O(n.lg(n))
-        int size = Math.min(k, r-l+1);
-        int[] finalResult = new int[size]; //k-1
+        HeapInt.sort(v, l, r, new DiffComparator(x));     //O(n.lg(n))
 
-        int nearIdx = binaryNearestSearch(v, l, r, x);       // O(n) ? RC: não sei o custo, temos de calcular
+        int size = Math.min(k, r - l + 1);
+        int[] result = new int[size];
 
-        int fill = 0;
-        int left = nearIdx - 1, right = nearIdx;
-
-        for (; fill < size; ) {
-            //if (left <= 0) { RC: Mas ca granda anormal então e o zero não conta ???
-            //if (left < 0) { RC: Este também nao serve porque é só até l inclusive
-            if (left < l) {
-                finalResult[fill++] = v[right++];
-            //} else if (right >= v.length) { // RC: Este também não serve porque é só até r inclusive
-            } else if (right > r) {
-                finalResult[fill++] = v[left--];
-            } else {
-                if (Math.abs(v[left] - x) < Math.abs(v[right] - x)) {
-                    finalResult[fill++] = v[left--];
-                } else {
-                    finalResult[fill++] = v[right++];
-                }
-            }
+        for (int i = 0; l < size; l++, i++) {
+            result[i] = v[l];
         }
 
-        return finalResult;
-    }
-
-    /**
-     * finds the position of x nearest value, using binarySearch algorithm
-     *
-     * @param v array to search
-     * @param l first position to search
-     * @param r last position to search
-     * @param x value to search
-     * @return position of x nearest value
-     */
-    private static int binaryNearestSearch(int[] v, int l, int r, int x) {
-        return binaryNearestSearchAux(v, l, r, x).idx;
-    }
-
-    private static class Position {
-        int idx;
-        int dif;
-
-        public Position(int idx, int dif) {
-            this.idx = idx;
-            this.dif = dif;
-        }
-    }
-
-    private static Position binaryNearestSearchAux(int[] v, int l, int r, int x) {
-        if (l > r) return new Position(-1, 0);
-        int med = l + (r - l) / 2;
-
-        if (x == v[med]) {
-            return new Position(med, 0);
-        }
-
-        if (x < v[med]) {
-            r = med - 1;
-        } else {
-            l = med + 1;
-        }
-
-        int dif = Math.abs(x - v[med]);
-
-        Position pos = binaryNearestSearchAux(v, l, r, x);
-        if (pos.idx == -1 || pos.dif > dif) {
-            pos.idx = med;
-            pos.dif = dif;
-        }
-        return pos;
+        return result;
     }
 
     public static int median(int[] v, int l, int r) {
@@ -149,7 +98,8 @@ public class Arrays {
         if (v.length < 1 || r < l) {
             return null;
         }
-        String result = v[v.length - 1];     //TODO: See l and r of Unit tests.
+        int result = l;
+
         int finalEqual = 0, equal = 0;
         for (int i = r; i >= l; i--) {
             if (i > v.length - 1) {
@@ -164,18 +114,10 @@ public class Arrays {
             }
             if (equal > finalEqual) {
                 finalEqual = equal;
-                result = v[i];
+                result = i;
             }
             equal = 0;
         }
-        return result;
-    }
-
-    public static String greaterCommonPrefix2(String[] v, int l, int r, String word) {
-        if (v.length < 1 || r < l) {
-            return null;
-        }
-
-        return null;
+        return v[result];
     }
 }
