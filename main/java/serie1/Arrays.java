@@ -82,20 +82,15 @@ public class Arrays {
     }
 
     /**
-     * Implementation O(n.lg(n))
+     * Implementation HeapSort O(n.lg(n))
+     * Implementation QuickSort O(n^2)
      *
-     * @param v
-     * @param l
-     * @param r
-     * @return
+     * @param v array to search
+     * @param l beginning of array
+     * @param r end of array
+     * @return  The median between {@code l} and {@code r} in the array {@code v}
      */
     public static int median(int[] v, int l, int r) {
-//        HeapInt.sort(v, l, r);
-//        if ((r - l + 1) % 2 == 0) {
-//            return (v[r / 2] + v[(r / 2) + 1]) / 2;
-//        }
-//        return v[r / 2];
-
         int i = l;
         Stack<Integer> stack = new Stack<>();
         stack.push(r);

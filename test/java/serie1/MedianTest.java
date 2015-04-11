@@ -1,9 +1,9 @@
 package serie1;
 
-import static org.junit.Assert.*;
-import static serie1.Arrays.median;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static serie1.Arrays.median;
 public class MedianTest {
 
 	@Test
@@ -31,9 +31,19 @@ public class MedianTest {
 		assertEquals(8,median(array,0,array.length-1));
 		
 	}
-		
-		
 
+	@Test
+	public void getMedian_onArrayWithParNumberOfElementsAndNotFinishedSorting(){
+		int[] array = {5, 0, 2, 7, 1, 6, 3, 8};
+		assertEquals(4, median(array, 0, array.length-1));
 	}
+
+	@Test
+	public void getMedian_onArrayWithParNumberOfElementsWithError(){
+		int[] array = {1, 2, 3, 9, 8, 7, 6, 4};
+		assertEquals(5, median(array, 0, array.length-1));
+	}
+		
+}
 
 	
