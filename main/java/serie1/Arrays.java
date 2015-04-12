@@ -1,6 +1,8 @@
 package serie1;
 
-import mylibrary.sort.HeapInt;
+import mylibrary.arrays.BinarySearch;
+import mylibrary.arrays.Heap;
+import mylibrary.arrays.QuickSort;
 
 import java.util.Comparator;
 
@@ -40,6 +42,10 @@ public class Arrays {
         return diff;
     }
 
+    /**
+     * Difference to number comparator as we need the n smaller difference, the comparation is inverted to turn the
+     * maxHeap algorithm into minHeap
+     */
     private static class DiffComparator implements Comparator<Integer> {
         private Integer x;
         public DiffComparator(Integer x){
@@ -48,7 +54,7 @@ public class Arrays {
 
         @Override
         public int compare(Integer o1, Integer o2) {
-            return Math.abs(x - o1) - Math.abs(x - o2);
+            return Math.abs(x - o2) - Math.abs(x - o1);
         }
     }
 
@@ -67,20 +73,51 @@ public class Arrays {
             return new int[0];
         }
 
-        HeapInt.sort(v, l, r, new DiffComparator(x));     //O(n.lg(n))
-
         int size = Math.min(k, r - l + 1);
+
+        Heap.sort(v, l, r, size, new DiffComparator(x));     //O(n.lg(n))
+
         int[] result = new int[size];
 
-        for (int i = 0; l < size; l++, i++) {
-            result[i] = v[l];
+        for (int i = 0; i < size; i++) {
+            result[i] = v[r--];
         }
 
         return result;
     }
 
+    /**
+     * Quick Sort
+     * @param v
+     * @param l
+     * @param r
+     * @return
+     */
     public static int median(int[] v, int l, int r) {
-        throw new UnsupportedOperationException();
+        int nElems = r-l + 1;
+        int med = l+(r-l)/2;
+
+        if(nElems %2 == 0){
+            QuickSort.grantFinalPositions(v, l, r, med, med+1, (Integer i1, Integer i2) -> i1.compareTo(i2));
+            return (v[med] + v[med+1]) / 2;
+        }
+
+        QuickSort.grantFinalPositions(v, l, r, med, med, (Integer i1, Integer i2) -> i1.compareTo(i2));
+        return v[med];
+    }
+
+    private static class StringPreffixComparator implements Comparator<String>{
+        @Override
+        public int compare(String o1, String o2) {
+            for(int i =0; i<Math.min(o1.length(), o2.length()); i++){
+                if(o1.charAt(i) < o2.charAt(i))
+                    return (o1.length()-i)*-1;
+                if(o1.charAt(i) > o2.charAt(i))
+                    return o1.length()-i;
+
+            }
+            return 0;
+        }
     }
 
     /**
@@ -93,31 +130,16 @@ public class Arrays {
      * @param r    End of search
      * @param word Word to search in array {@code v}
      * @return The word in array {@code v} that has a greater common prefix with {@code word}.
+     *
+     * Binary Search
      */
     public static String greaterCommonPrefix(String[] v, int l, int r, String word) {
         if (v.length < 1 || r < l) {
             return null;
         }
-        int result = l;
 
-        int finalEqual = 0, equal = 0;
-        for (int i = r; i >= l; i--) {
-            if (i > v.length - 1) {
-                continue;
-            }
-            for (int j = 0; j < word.length() && j < v[i].length(); j++) {
-                if (word.charAt(j) == v[i].charAt(j)) {
-                    equal++;
-                } else {
-                    break;
-                }
-            }
-            if (equal > finalEqual) {
-                finalEqual = equal;
-                result = i;
-            }
-            equal = 0;
-        }
-        return v[result];
+        BinarySearch.Position p = BinarySearch.findNearest0(v, l, r, word, new StringPreffixComparator());
+
+        return v[p.getDif() == word.length() ? r : p.getIdx()];
     }
 }
