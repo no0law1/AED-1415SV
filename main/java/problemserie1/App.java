@@ -1,10 +1,7 @@
 package problemserie1;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -23,54 +20,117 @@ import java.util.Scanner;
 */
 public class App {
 
-    private List<String> words;
+    private int i;
+    private String outputFile;
+    private String[] sourceFiles;
+    int nSourceFiles;
+    PrintStream ps;
+    Scanner scanner[];
+    String line[];
+    String iword[];
+    long nlines;
 
-    private int numberOfWordsAcceptedByFile;
-
-    private File finalTxt;
-
-    public App(int numberOfWordsAcceptedByFile, String finalTxtPath, String []inputTxtFiles){
-        this.numberOfWordsAcceptedByFile = numberOfWordsAcceptedByFile;
-        finalTxt = new File(finalTxtPath);
-        addToFinalTxtPath(inputTxtFiles);
+    public App(int i, String outputFile, String []sourceFiles){
+        if(i <= 0) throw new IllegalArgumentException("i can't be less than 1");
+        if(outputFile == null) throw new IllegalArgumentException("outputFile can't be null");
+        if(sourceFiles == null) throw new IllegalArgumentException("sourceFiles can't be null");
+        if(sourceFiles.length <= 0) throw new IllegalArgumentException("sourceFiles can't be less than 1");
+        nSourceFiles = sourceFiles.length;
+        this.i = i;
+        this.outputFile = outputFile;
+        this.sourceFiles = sourceFiles;
+        scanner = new Scanner[sourceFiles.length];
+        line = new String[sourceFiles.length];
+        iword = new String[sourceFiles.length];
     }
 
-    /**
-     * With -Xmx32m, app reaches limit.
-     *
-     * @param inputTxtFiles
-     */
-    private void addToFinalTxtPath(String[] inputTxtFiles) {
-        words = new ArrayList<>();
-        for (int i = 0; i < inputTxtFiles.length; i++) {
-            try (Scanner txtFileStream = new Scanner(new FileReader(inputTxtFiles[i]))) {
-                while(txtFileStream.hasNext()){
-                    String word = txtFileStream.nextLine();
-                    if(word.length() >= numberOfWordsAcceptedByFile){
-                        words.add(word);
-                    }
+    public void mergeFiles() throws FileNotFoundException{
+        ps = new PrintStream(new FileOutputStream(outputFile, false));
+
+        nlines = 0;
+        long startTime = System.currentTimeMillis();
+
+        prepareInputFiles();
+        processWords();
+        closeFiles();
+
+        System.out.println("n lines: " + nlines + " in millis " + (System.currentTimeMillis() - startTime));
+    }
+
+    private void processWords(){
+        int smallestWord = 0;
+
+        for(;;) {
+            int j = 0;
+            for (; j < nSourceFiles; j++) {
+                if (iword[j] != null) {
+                    smallestWord = j++;
+                    break;
                 }
             }
-            catch (FileNotFoundException e) {
-                e.printStackTrace();
+
+            for (; j < nSourceFiles; j++) {
+                if (iword[j] != null && iword[smallestWord].compareTo(iword[j]) < 0) {
+                    smallestWord = j;
+                }
             }
+            if(iword[smallestWord] == null) break;
+            ps.println(line[smallestWord]);
+            getNextAcceptedLineFromFile(smallestWord);
+            nlines++;
         }
     }
 
+    private void prepareInputFiles() throws FileNotFoundException{
+        for(int j = 0; j<nSourceFiles; j++){
+            scanner[j] = new Scanner(new File(sourceFiles[j]));
+            scanner[j].useDelimiter(System.lineSeparator());
+            getNextAcceptedLineFromFile(j);
+        }
+    }
+
+    private void getNextAcceptedLineFromFile(int fileIdx){
+        String words[];
+        while (scanner[fileIdx].hasNextLine() &&
+                (line[fileIdx] = scanner[fileIdx].nextLine()) != null &&
+                (words = line[fileIdx].split(" ")).length >= i){
+            iword[fileIdx] = words[i-1];
+            return;
+        }
+        iword[fileIdx] = null;
+        line[fileIdx] = null;
+    }
+
+    private void closeFiles(){
+        if(ps != null){
+            ps.flush();
+            ps.close();
+            ps = null;
+        }
+
+        for(int j = 0; j<nSourceFiles; j++){
+            scanner[j].close();
+            scanner[j] = null;
+        }
+    }
 
     /**
      *
-     * @param args {numberOfWordsAcceptedByFile, outputFile, files...}
+     * @param args {i, outputFile, files...}
      */
-    public static void main(String []args){
+    public static void main(String []args) throws FileNotFoundException{
         if(args.length<=3){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("usage: java -Xmx32m juntarFicheiros 1 output.txt f1.txt f2.txt f3.txt");
         }
-        String[] inputTxtFiles = new String[args.length-1-1];
-        System.arraycopy(args, 2, inputTxtFiles, 0, args.length-1-1);
 
-        App app = new App(Integer.parseInt(args[0]), args[1], inputTxtFiles);
-
+        App app = new App(Integer.parseInt(args[0]), args[1], Arrays.copyOfRange(args, 2, args.length-2));
+        try {
+            app.mergeFiles();
+        }
+        catch (FileNotFoundException ex){
+            ex.printStackTrace(System.out);
+            throw ex;
+        }
 
     }
 }
