@@ -1,5 +1,7 @@
 package problemserie1;
 
+import problemserie1.filehandling.InputFile;
+
 import java.io.*;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -20,32 +22,28 @@ import java.util.Scanner;
 */
 public class App {
 
-    private int i;
+    private int ith;
     private String outputFile;
     private String[] sourceFiles;
     int nSourceFiles;
     PrintStream ps;
-    Scanner scanner[];
-    String line[];
-    String iword[];
+    InputFile inputFiles[];
     long nlines;
 
-    public App(int i, String outputFile, String []sourceFiles){
-        if(i <= 0) throw new IllegalArgumentException("i can't be less than 1");
+    public App(int ith, String outputFile, String []sourceFiles){
+        if(ith <= 0) throw new IllegalArgumentException("ith can't be less than 1");
         if(outputFile == null) throw new IllegalArgumentException("outputFile can't be null");
         if(sourceFiles == null) throw new IllegalArgumentException("sourceFiles can't be null");
         if(sourceFiles.length <= 0) throw new IllegalArgumentException("sourceFiles can't be less than 1");
         nSourceFiles = sourceFiles.length;
-        this.i = i;
+        this.ith = ith;
         this.outputFile = outputFile;
         this.sourceFiles = sourceFiles;
-        scanner = new Scanner[sourceFiles.length];
-        line = new String[sourceFiles.length];
-        iword = new String[sourceFiles.length];
+        inputFiles = new InputFile[nSourceFiles];
     }
 
     public void mergeFiles() throws FileNotFoundException{
-        ps = new PrintStream(new FileOutputStream(outputFile, false));
+        ps = new PrintStream(new FileOutputStream(outputFile, false), true);
 
         nlines = 0;
         long startTime = System.currentTimeMillis();
@@ -61,44 +59,31 @@ public class App {
         int smallestWord = 0;
 
         for(;;) {
-            int j = 0;
-            for (; j < nSourceFiles; j++) {
-                if (iword[j] != null) {
-                    smallestWord = j++;
+            int i = 0;
+            for (; i < nSourceFiles; i++) {
+                if (inputFiles[i].getIthWord() != null) {
+                    smallestWord = i++;
                     break;
                 }
             }
 
-            for (; j < nSourceFiles; j++) {
-                if (iword[j] != null && iword[smallestWord].compareTo(iword[j]) < 0) {
-                    smallestWord = j;
+            for (; i < nSourceFiles; i++) {
+                if (inputFiles[i].getIthWord() != null &&
+                        inputFiles[smallestWord].getIthWord().compareTo(inputFiles[i].getIthWord()) < 0) {
+                    smallestWord = i;
                 }
             }
-            if(iword[smallestWord] == null) break;
-            ps.println(line[smallestWord]);
-            getNextAcceptedLineFromFile(smallestWord);
+            if(inputFiles[smallestWord].getIthWord() == null) break;
+            ps.println(inputFiles[smallestWord].getLine());
+            inputFiles[smallestWord].getNextAcceptedLine();
             nlines++;
         }
     }
 
     private void prepareInputFiles() throws FileNotFoundException{
-        for(int j = 0; j<nSourceFiles; j++){
-            scanner[j] = new Scanner(new File(sourceFiles[j]));
-            scanner[j].useDelimiter(System.lineSeparator());
-            getNextAcceptedLineFromFile(j);
+        for(int i = 0; i<nSourceFiles; i++){
+            inputFiles[i] = new InputFile(sourceFiles[i], ith, System.lineSeparator());
         }
-    }
-
-    private void getNextAcceptedLineFromFile(int fileIdx){
-        String words[];
-        while (scanner[fileIdx].hasNextLine() &&
-                (line[fileIdx] = scanner[fileIdx].nextLine()) != null &&
-                (words = line[fileIdx].split(" ")).length >= i){
-            iword[fileIdx] = words[i-1];
-            return;
-        }
-        iword[fileIdx] = null;
-        line[fileIdx] = null;
     }
 
     private void closeFiles(){
@@ -108,15 +93,15 @@ public class App {
             ps = null;
         }
 
-        for(int j = 0; j<nSourceFiles; j++){
-            scanner[j].close();
-            scanner[j] = null;
+        for(int i = 0; i<nSourceFiles; i++){
+            inputFiles[i].close();
+            inputFiles[i] = null;
         }
     }
 
     /**
      *
-     * @param args {i, outputFile, files...}
+     * @param args {ith, outputFile, files...}
      */
     public static void main(String []args) throws FileNotFoundException{
         if(args.length<=3){
