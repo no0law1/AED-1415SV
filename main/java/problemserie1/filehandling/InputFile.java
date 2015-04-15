@@ -10,35 +10,22 @@ import java.util.Scanner;
 public class InputFile {
     public final int ith;
     private Scanner scanner;
-    private String line;
-    private String ithWord;
+    private Line line;
 
     public InputFile(String filenamePath, int ith, String wordDelimiter) throws FileNotFoundException {
-        //TODO: dropar exceções
+        //TODO: dropar excepções
         this.ith = ith;
         scanner = new Scanner(new File(filenamePath));
         scanner.useDelimiter(wordDelimiter);
-        getNextAcceptedLine();
+        line = Line.create(ith, scanner);
     }
 
-    public void getNextAcceptedLine(){
-        String lineWords[];
-        while (scanner.hasNextLine() &&
-                (line = scanner.nextLine()) != null &&
-                (lineWords = line.split(" ")).length >= ith){
-            ithWord = lineWords[ith-1];
-            return;
-        }
-        ithWord = null;
-        line = null;
-    }
-
-    public String getIthWord() {
-        return ithWord;
-    }
-
-    public String getLine() {
+    public Line getCurrentLine() {
         return line;
+    }
+
+    public void processNextAcceptedLine(){
+        line.processNextAcceptedLine(scanner);
     }
 
     public void close(){

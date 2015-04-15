@@ -17,7 +17,7 @@ public class AppTest {
                 "../../FilesEx3/f1.txt",
                 "../../FilesEx3/f2.txt",
                 "../../FilesEx3/f3.txt"};
-        App app = new App(i, finalTxtPath, inputTxtFiles);
+        AppQueue app = new AppQueue(i, finalTxtPath, inputTxtFiles);
         app.mergeFiles();
     }
 }

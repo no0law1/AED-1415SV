@@ -2,7 +2,7 @@ package mylibrary.arrays;
 
 import java.util.Comparator;
 
-public class Heap {
+public class Heap{
 
     private static int parent(int i){
         return (i-1)/2;
