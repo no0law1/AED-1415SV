@@ -1,12 +1,11 @@
 package problemserie1;
 
-import mylibrary.arrays.PriorityQueue;
+import problemserie1.filehandling.InputFileHeap;
 import problemserie1.filehandling.InputFile;
 import problemserie1.filehandling.OutputFile;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.Comparator;
 
 /**
  * Idea = Load every file into a List.
@@ -22,31 +21,17 @@ import java.util.Comparator;
  *
  * Created by Nuno on 26/03/2015.
 */
-public class AppQueue {
+public class AppHeap {
 
     private int ith;
     private String outputFile;
     private String[] sourceFiles;
     int nSourceFiles;
     OutputFile of;
-    PriorityQueue<InputFile> inputFileQueue;
+    InputFileHeap inputFileHeap;
     long nlines;
 
-    private static class InputFileComparator implements Comparator<InputFile>{
-
-        @Override
-        public int compare(InputFile o1, InputFile o2) {
-            if(o1 == null || o1.getCurrentLine() == null || o1.getCurrentLine().getIthWord() == null){
-                return Integer.MAX_VALUE;
-            }
-            if(o2 == null || o2.getCurrentLine() == null || o2.getCurrentLine().getIthWord() == null){
-                return Integer.MIN_VALUE;
-            }
-            return o2.getCurrentLine().getIthWord().compareTo(o1.getCurrentLine().getIthWord());
-        }
-    }
-
-    public AppQueue(int ith, String outputFile, String[] sourceFiles){
+    public AppHeap(int ith, String outputFile, String[] sourceFiles){
         if(ith <= 0) throw new IllegalArgumentException("ith can't be less than 1");
         if(outputFile == null) throw new IllegalArgumentException("outputFile can't be null");
         if(sourceFiles == null) throw new IllegalArgumentException("sourceFiles can't be null");
@@ -55,7 +40,7 @@ public class AppQueue {
         this.ith = ith;
         this.outputFile = outputFile;
         this.sourceFiles = sourceFiles;
-        inputFileQueue = new PriorityQueue<>(InputFile.class, nSourceFiles, new InputFileComparator());
+        inputFileHeap = new InputFileHeap(nSourceFiles);
     }
 
     public void mergeFiles() throws FileNotFoundException{
@@ -74,20 +59,16 @@ public class AppQueue {
     }
 
     private void processWords(){
-        InputFile inputFile;
-        while((inputFile = inputFileQueue.getNextValue()) != null) {
-            of.writeln(inputFile.getCurrentLine().getText());
-            inputFile.processNextAcceptedLine();
-            if(inputFile.getCurrentLine().getText() != null) {
-                inputFileQueue.addValue(inputFile);
-            }
+        String line;
+        while((line = inputFileHeap.getNextLine()) != null) {
+            of.writeln(line);
             nlines++;
         }
     }
 
     private void prepareInputFiles() throws FileNotFoundException{
         for(int i = 0; i<nSourceFiles; i++){
-            inputFileQueue.addValue(new InputFile(sourceFiles[i], ith, System.lineSeparator()));
+            inputFileHeap.addValue(new InputFile(sourceFiles[i], ith, System.lineSeparator()));
         }
     }
 
@@ -95,10 +76,7 @@ public class AppQueue {
         of.close();
         of = null;
 
-        InputFile inputFile;
-        while((inputFile = inputFileQueue.getNextValue()) != null){
-            inputFile.close();
-        }
+        inputFileHeap.close();
     }
 
     /**
@@ -111,7 +89,7 @@ public class AppQueue {
         }
 
         //TODO: ArrayCopy
-        AppQueue app = new AppQueue(Integer.parseInt(args[0]), args[1], Arrays.copyOfRange(args, 2, args.length));
+        AppHeap app = new AppHeap(Integer.parseInt(args[0]), args[1], Arrays.copyOfRange(args, 2, args.length));
         try {
             app.mergeFiles();
         }
