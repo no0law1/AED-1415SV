@@ -98,11 +98,11 @@ public class Arrays {
         int med = l+(r-l)/2;
 
         if(nElems %2 == 0){
-            QuickSort.grantFinalPositions(v, l, r, med, med+1, (Integer i1, Integer i2) -> i1.compareTo(i2));
+            QuickSort.grantFinalPositions(v, l, r, med, med+1, Integer::compareTo);
             return (v[med] + v[med+1]) / 2;
         }
 
-        QuickSort.grantFinalPositions(v, l, r, med, med, (Integer i1, Integer i2) -> i1.compareTo(i2));
+        QuickSort.grantFinalPositions(v, l, r, med, med, Integer::compareTo);
         return v[med];
     }
 
