@@ -46,7 +46,7 @@ public class StackArray<E> implements Stack<E> {
     @Override
     public E peek() {
         if(!isEmpty()) {
-            return stack[size];
+            return stack[size-1];
         }
         throw new IllegalStateException();
     }

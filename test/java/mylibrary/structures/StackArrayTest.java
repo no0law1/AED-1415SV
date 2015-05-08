@@ -62,6 +62,13 @@ public class StackArrayTest {
     public void testPeek() throws Exception {
         StackArray<Integer> stack = new StackArray<>();
 
+        stack.push(0);
+        stack.push(1);
+
+        assertThat(1, is(equalTo(stack.peek())));
+        stack.pop();
+        assertThat(0, is(equalTo(stack.peek())));
+
     }
 
     @Test

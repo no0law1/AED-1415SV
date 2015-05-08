@@ -1,44 +1,36 @@
 package serie2;
 
+import mylibrary.structures.StackArray;
+
 /**
  *
  */
 public class Utils {
 
     /**
-     * TODO: Stack
+     *
      * @param str
      * @return
      */
     public static boolean verifyXML(String str) {
-        boolean beginningBracket = false;
-        boolean closingBracket = false;
-        int n = 0;
+        StackArray<String> stack = new StackArray<>();
 
+        int beginIndex = 0;
         for (int i = 0; i < str.length(); i++) {
             char aux = str.charAt(i);
             if (aux == '<') {
-                beginningBracket = true;
+                beginIndex = i;
             }
             if (aux == '>') {
-                if (closingBracket) {
-                    if (n == 0) {
-                        return false;
-                    }
-                    beginningBracket = false;
-                    closingBracket = false;
-                    n--;
-                } else if (beginningBracket) {
-                    beginningBracket = false;
-                    n++;
+                String inBrackets = str.substring(beginIndex + 1, i);
+                if (!stack.isEmpty() && stack.peek().equals(inBrackets.substring(1, inBrackets.length()))) {
+                    stack.pop();
+                } else {
+                    stack.push(inBrackets);
                 }
             }
-            if (aux == '/' && str.charAt(i - 1) == '<') {
-                closingBracket = true;
-            }
-
         }
-        return !beginningBracket && !closingBracket && n == 0;
+        return stack.isEmpty();
     }
 
     public static<K,V> void replace(HashNode<K,V>[] hashMap, HashNode<K,V> list){
