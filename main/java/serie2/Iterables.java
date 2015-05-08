@@ -12,6 +12,7 @@ public class Iterables {
         return () -> new Iterator<Integer>() {
             private Integer curr = null;
             private Iterator<Integer> iterator = src.iterator();
+
             @Override
             public boolean hasNext() {
                 if(curr!=null){

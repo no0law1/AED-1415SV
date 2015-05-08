@@ -22,6 +22,7 @@ public class ListUtils {
      * @return
      */
     public static <E> E getKBiggest(Node<E> list, int k, Comparator<E> cmp) {
+        //TODO: Don't understand the concept of the problem
         if (k > 0) {
             int n = 0;
             Node<E> result = list;
@@ -49,6 +50,7 @@ public class ListUtils {
         while(lists[0]!=null){
             lists[0] = lists[0].next;
 
+            //TODO: Something wrong. cmp and null values
             Heap.sort(lists, 0, lists.length-1, (i1, i2)->(cmp.compare(i1.value, i2.value)));
 
             Node<E> recurrentSearch = lists[0];
