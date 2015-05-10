@@ -1,5 +1,7 @@
 package serie2;
 
+import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 import java.util.Collections;
@@ -15,7 +17,7 @@ public class IterablesTest {
 	protected static <T> List<T> unmodifiable( List<T> s ) {
 		return Collections.unmodifiableList(s);
 	}
-	
+
 	protected static <T> void assertIterableEquals( Iterable<T> expected, Iterable<T>  result) {
 		Iterator<T> itE= expected.iterator(), 
 		            itR= result.iterator();
@@ -30,7 +32,7 @@ public class IterablesTest {
 	protected static <T> void assertIterableEmpty( Iterable<T> result ) {
 		assertFalse( result.iterator().hasNext() );
 	}
-	
+
 	protected static <T> void testNextWithoutHasNext( Iterable<T> expected, Iterable<T>  result) {
 		Iterator<T> itE= expected.iterator(), 
 		            itR= result.iterator();
@@ -39,7 +41,7 @@ public class IterablesTest {
 		}
 		assertFalse( itR.hasNext() );
 	}
-	
+
 	protected static <T> void testMultipleIterations(Iterable<T> expected, Iterable<T>  result ) {
 		Iterator<T> itR, itE;
 		for (int i = 0; i < 2; ++i ) {
@@ -51,7 +53,7 @@ public class IterablesTest {
 			assertFalse( itE.hasNext() );
 		}
 	}
-	
+
 	protected static <T> void testDoubleHasNext(Iterable<T> expected, Iterable<T>  result ) {
 		Iterator<T> itE= expected.iterator(),
                     itR= result.iterator();
@@ -63,7 +65,7 @@ public class IterablesTest {
 		assertFalse( itE.hasNext() );
 	}
 
-	
+
 	protected static <T> void test(Iterable<T> expected, Iterable<T>  result ) {
 		assertIterableEquals( expected, result );
 		testNextWithoutHasNext(expected, result);

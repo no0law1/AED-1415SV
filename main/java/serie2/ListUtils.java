@@ -10,10 +10,10 @@ import java.util.Comparator;
 public class ListUtils {
 
     /**
-     * que dada a lista simplesmente ligada sem sentinela e não circular referenciada por list, ordenada de modo crescente
-     * segundo o comparador cmp, retorna se existir, o k-ésimo maior elemento presente na lista. Caso a lista tenha menos de k
-     * elementos, o método deverá retorna null. Considere que cada objeto do tipo Node<E> tem dois campos: um value e
-     * uma referência, next. NOTA: na resolução deste exercício, apenas deverá ser utilizado o campo next da classe Node.
+     * que dada a lista simplesmente ligada sem sentinela e nï¿½o circular referenciada por list, ordenada de modo crescente
+     * segundo o comparador cmp, retorna se existir, o k-ï¿½simo maior elemento presente na lista. Caso a lista tenha menos de k
+     * elementos, o mï¿½todo deverï¿½ retorna null. Considere que cada objeto do tipo Node<E> tem dois campos: um value e
+     * uma referï¿½ncia, next. NOTA: na resoluï¿½ï¿½o deste exercï¿½cio, apenas deverï¿½ ser utilizado o campo next da classe Node.
 
      * @param list
      * @param k
@@ -22,51 +22,79 @@ public class ListUtils {
      * @return
      */
     public static <E> E getKBiggest(Node<E> list, int k, Comparator<E> cmp) {
-        if (k > 0) {
-            int n = 0;
-            Node<E> result = list;
-            while (list != null && n<k) {
-                if (cmp.compare(list.value, result.value) > 0) {
-                    result.value = list.value;
-                }
-                list = list.next;
-                n++;
-            }
-            return (n==k) ? result.value : null;
+        if ( list == null || k <= 0 ) return null;
+        int n = 1;
+        Node<E> kNode = list;
+        Node<E> lastNode = list;
+        while( n++ < k ){
+            lastNode = lastNode.next;
+            if(lastNode.next == null) break;
         }
-        return null;
+        if( n < k ) return null;
+        while( lastNode.next != null ){
+            lastNode = lastNode.next;
+            kNode = kNode.next;
+        }
+        return kNode.value;
+    }
+
+    public static <E> void removeFromList(Node<E> node){
+        if(node.next != null) node.next.previous = node.previous;
+        if(node.previous != null) node.previous.next = node.next;
+    }
+
+    public static <E> void addToList(Node<E> list, Node<E> node){
+        node.next = list;
+        node.previous = list.previous;
+        list.previous.next = node;
+        list.previous = node;
+    }
+
+    private static class NodeComparator<E> implements Comparator<Node<E>>{
+
+        private Comparator<E> cmp;
+
+        public NodeComparator(Comparator<E> cmp){
+            if(cmp == null)
+                throw new IllegalArgumentException("cmp can't be null");
+            this.cmp = cmp;
+        }
+
+        @Override
+        public int compare(Node<E> o1, Node<E> o2) {
+            if(o1 == null) return Integer.MAX_VALUE;
+            if(o2 == null) return Integer.MIN_VALUE;
+            return cmp.compare(o1.value, o2.value);
+        }
     }
 
     public static <E> Node<E> occurAtLeastKTimes(Node<E>[] lists, Comparator<E> cmp, int k) {
-        Node<E> result = new Node<>();
-        result.next = result;
-        result.previous = result;
 
-        Node<E> aux = result;
-        Node<E> toBeSearched = lists[0];
-        int numberOfTimes = 0;
+        Node<E> returnList = new Node<>();
+        returnList.next = returnList.previous = returnList;
 
-        while(lists[0]!=null){
-            lists[0] = lists[0].next;
+        int count;
 
-            Heap.sort(lists, 0, lists.length-1, (i1, i2)->(cmp.compare(i1.value, i2.value)));
+        Node<E> currentNode;
 
-            Node<E> recurrentSearch = lists[0];
-            if(recurrentSearch.value.equals(toBeSearched.value)) {
-                numberOfTimes++;
-            } else{
-                if(numberOfTimes >= k){
-                    Node<E> onlyOnce = new Node<>(toBeSearched.value);
-                    onlyOnce.next = aux.next;
-                    onlyOnce.previous = aux;
-                    aux.next.previous = onlyOnce;
-                    aux.next = onlyOnce;
+        while(true){
+            Heap.sort(lists, 0, lists.length - 1, new NodeComparator(cmp));
+            if(lists[0] == null) return returnList;
+            currentNode = lists[0];
+            count = 0;
+            for(int i =0; i < lists.length;){
+                if(lists[i] != null && cmp.compare(lists[i].value, currentNode.value) == 0) {
+                    count += 1;
+                    lists[i] = lists[i].next;
                 }
-                numberOfTimes = 0;
-                toBeSearched = lists[0];
+                else{
+                    i++;
+                }
             }
-
+            if(count >= k){
+                removeFromList(currentNode);
+                addToList(returnList, currentNode);
+            }
         }
-        return aux;
     }
 }
