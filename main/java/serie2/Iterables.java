@@ -47,26 +47,34 @@ public class Iterables {
 
     public static<K,V> Iterable<K> getKeys(HashNode<K,V>[] hashMap){
         return () -> new Iterator<K>() {
-            private HashNode<K,V> curr = null;
-
-            private int currPos = 0;
+            HashNode<K, V> curr = null;
+            private int currPos = -1;
+            private boolean foundNext = false;
 
             @Override
             public boolean hasNext() {
-                if(curr != null){
-                    return true;
+                if(foundNext) return true;
+                for(;;){
+                    while (curr != null && curr.next != null) {
+                        if (!curr.key.equals(curr.next.key)) {
+                            curr = curr.next;
+                            return foundNext = true;
+                        }
+                        curr = curr.next;
+                    }
+                    currPos += 1;
+                    if(currPos >= hashMap.length) return false;
+                    curr = hashMap[currPos];
+                    if(curr != null) return foundNext = true;
                 }
-
-                if(currPos < hashMap.length-1){
-                    currPos+=1;
-                    return true;
-                }
-
-                return false;
             }
 
             @Override
             public K next() {
+                if(hasNext()){
+                    foundNext = false;
+                    return curr.key;
+                }
                 return null;
             }
 
