@@ -15,20 +15,18 @@ public class Utils {
     public static boolean verifyXML(String str) {
         StackArray<String> stack = new StackArray<>();
 
-        int beginIndex = 0;
-        for (int i = 0; i < str.length(); i++) {
-            char aux = str.charAt(i);
-            if (aux == '<') {
-                beginIndex = i;
-            }
-            if (aux == '>') {
-                String inBrackets = str.substring(beginIndex + 1, i);
-                if (!stack.isEmpty() && stack.peek().equals(inBrackets.substring(1, inBrackets.length()))) {
-                    stack.pop();
-                } else {
-                    stack.push(inBrackets);
-                }
-            }
+        int idx = 0;
+        for (;idx < str.length();) {
+            int openIdx = str.indexOf('<', idx);
+            if(openIdx == -1) break;
+            int closeIdx = str.indexOf('>', openIdx);
+            if(closeIdx == -1) return false;
+
+            boolean closeKey = str.charAt(openIdx+1) == '/';
+            String key = str.substring(openIdx + ((closeKey) ? 2 : 1), closeIdx);
+            if(!closeKey) stack.push(key);
+            else if(stack.isEmpty() || !stack.pop().equals(key)) return false;
+            idx = closeIdx+1;
         }
         return stack.isEmpty();
     }

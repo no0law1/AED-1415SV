@@ -104,34 +104,4 @@ public class ListUtils {
 
         return returnList;
     }
-
-    public static <E> Node<E> occurAtLeastKTimesOld(Node<E>[] lists, Comparator<E> cmp, int k) {
-
-        Node<E> returnList = new Node<>();
-        returnList.next = returnList.previous = returnList;
-
-        int count;
-
-        Node<E> currentNode;
-
-        while(true){
-            Heap.maxHeapSort(lists, 0, lists.length - 1, new NodeComparator(cmp));
-            if(lists[0] == null) return returnList;
-            currentNode = lists[0];
-            count = 0;
-            for(int i =0; i < lists.length;){
-                if(lists[i] != null && cmp.compare(lists[i].value, currentNode.value) == 0) {
-                    count += 1;
-                    lists[i] = lists[i].next;
-                }
-                else{
-                    i++;
-                }
-            }
-            if(count >= k){
-                removeFromList(currentNode);
-                addToList(returnList, currentNode);
-            }
-        }
-    }
 }
