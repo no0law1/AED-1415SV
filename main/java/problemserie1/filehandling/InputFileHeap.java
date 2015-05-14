@@ -14,12 +14,12 @@ public class InputFileHeap {
         @Override
         public int compare(InputFile o1, InputFile o2) {
             if(o1 == null || o1.getCurrentLine().getIthWord() == null){
-                return Integer.MAX_VALUE;
-            }
-            if(o2 == null || o2.getCurrentLine().getIthWord() == null){
                 return Integer.MIN_VALUE;
             }
-            return o2.getCurrentLine().getIthWord().compareTo(o1.getCurrentLine().getIthWord());
+            if(o2 == null || o2.getCurrentLine().getIthWord() == null){
+                return Integer.MAX_VALUE;
+            }
+            return o1.getCurrentLine().getIthWord().compareTo(o2.getCurrentLine().getIthWord());
         }
     }
 
@@ -39,7 +39,7 @@ public class InputFileHeap {
             return null;
         String line = values[0].getCurrentLine().getText();
         values[0].processNextAcceptedLine();
-        Heap.heapify(values, 0, 0, nValues, comp);
+        Heap.minHeapify(values, 0, 0, nValues, comp);
         return line;
     }
 
@@ -48,7 +48,7 @@ public class InputFileHeap {
             throw new RuntimeException("This heap doesn't grow");
         }
         values[nValues] = value;
-        Heap.heapify(values, 0, 0, nValues, comp);
+        Heap.minHeapify(values, 0, 0, nValues, comp);
         nValues++;
     }
 

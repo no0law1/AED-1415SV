@@ -70,6 +70,43 @@ public class ListUtils {
 
     public static <E> Node<E> occurAtLeastKTimes(Node<E>[] lists, Comparator<E> cmp, int k) {
 
+        NodeComparator ncmp = new NodeComparator(cmp);
+
+        Node<E> returnList = new Node<>();
+        returnList.next = returnList.previous = returnList;
+
+        int heapSize = lists.length;
+        Heap.buildMinHeap(lists, heapSize, ncmp);
+
+        Node currentNode = lists[0];
+        int count = 0;
+
+        for(;lists[0] != null;){
+            if(ncmp.compare(currentNode, lists[0]) == 0){
+                count++;
+            }
+            else{
+                if(count >= k){
+                    removeFromList(currentNode);
+                    addToList(returnList, currentNode);
+                }
+                currentNode = lists[0];
+                count = 1;
+            }
+            lists[0] = lists[0].next;
+            Heap.minHeapify(lists, 0, heapSize, ncmp);
+        }
+
+        if(count >= k){
+            removeFromList(currentNode);
+            addToList(returnList, currentNode);
+        }
+
+        return returnList;
+    }
+
+    public static <E> Node<E> occurAtLeastKTimesOld(Node<E>[] lists, Comparator<E> cmp, int k) {
+
         Node<E> returnList = new Node<>();
         returnList.next = returnList.previous = returnList;
 
@@ -78,7 +115,7 @@ public class ListUtils {
         Node<E> currentNode;
 
         while(true){
-            Heap.sort(lists, 0, lists.length - 1, new NodeComparator(cmp));
+            Heap.maxHeapSort(lists, 0, lists.length - 1, new NodeComparator(cmp));
             if(lists[0] == null) return returnList;
             currentNode = lists[0];
             count = 0;

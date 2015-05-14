@@ -7,11 +7,19 @@ import java.util.Comparator;
  */
 public class QuickSort {
 
-    public static <T extends Comparable<? super T>> void sort(T[] v, int left, int right, boolean asc){
-        sort(v, left, right, (T t1, T t2) -> asc ? t1.compareTo(t2) : t2.compareTo(t1));
+    public static <E extends Comparable<? super E>> void sort(E[] v, boolean asc){
+        sort(v, (t1, t2) -> asc ? t1.compareTo(t2) : t2.compareTo(t1));
     }
 
-    public static <T> void sort(T[] v, int left, int right, Comparator<T> c) {
+    public static <E extends Comparable<? super E>> void sort(E[] v, int left, int right, boolean asc){
+        sort(v, left, right, (t1, t2) -> asc ? t1.compareTo(t2) : t2.compareTo(t1));
+    }
+
+    public static <E> void sort(E[] v, Comparator<E> c) {
+        sort(v, 0, v.length-1, c);
+    }
+
+    public static <E> void sort(E[] v, int left, int right, Comparator<E> c) {
         int i;
         if (right <= left) return;
         i = partition(v, left, right, c);
@@ -19,8 +27,8 @@ public class QuickSort {
         sort(v, i + 1, right, c);
     }
 
-    public static <T> int partition(T[] v, int l, int r, Comparator<T> c) {
-        T x = v[r];
+    private static <E> int partition(E[] v, int l, int r, Comparator<E> c) {
+        E x = v[r];
         int i = l - 1;
         for (int j = l; j < r; j++) {
             if (c.compare(v[j], x) <= 0) {
@@ -33,8 +41,16 @@ public class QuickSort {
         return i;
     }
 
+    public static void sort(int[] v, boolean asc){
+        sort(v, (i1, i2) -> (asc) ? i1 - i2 : i2 - i1);
+    }
+
     public static void sort(int[] v, int left, int right, boolean asc){
-        sort(v, left, right, (Integer i1, Integer i2) -> (asc) ? i1.compareTo(i2) : i2.compareTo(i1));
+        sort(v, left, right, (i1, i2) -> (asc) ? i1 - i2 : i2 - i1);
+    }
+
+    public static void sort(int[] v, Comparator<Integer> c) {
+        sort(v, 0, v.length-1, c);
     }
 
     public static void sort(int[] v, int left, int right, Comparator<Integer> c) {
@@ -57,7 +73,7 @@ public class QuickSort {
         }
     }
 
-    public static int partition(int[] v, int l, int r, Comparator<Integer> c) {
+    private static int partition(int[] v, int l, int r, Comparator<Integer> c) {
         int x = v[r];
         int i = l - 1;
         for (int j = l; j < r; j++) {

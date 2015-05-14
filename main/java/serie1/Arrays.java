@@ -3,6 +3,7 @@ package serie1;
 import mylibrary.arrays.BinarySearch;
 import mylibrary.arrays.Heap;
 import mylibrary.arrays.QuickSort;
+import mylibrary.arrays.Utils;
 
 import java.util.Comparator;
 
@@ -54,7 +55,7 @@ public class Arrays {
 
         @Override
         public int compare(Integer o1, Integer o2) {
-            return Math.abs(x - o2) - Math.abs(x - o1);
+            return Math.abs(x - o1) - Math.abs(x - o2);
         }
     }
 
@@ -73,13 +74,21 @@ public class Arrays {
             return new int[0];
         }
 
-        int size = Math.min(k, r - l + 1);
+        int heapSize = r-l+1;
+        int nValues = Math.min(k, heapSize);
 
-        Heap.sort(v, l, r, size, new DiffComparator(x));     //O(n.lg(n))
+//        Heap.maxHeapSort(v, l, r, size, new DiffComparator(x));     //O(n.lg(n))
+        DiffComparator cmp = new DiffComparator(x);
 
-        int[] result = new int[size];
+        Heap.buildMinHeap(v, 0, heapSize, cmp);
+        for (int i = 0; i < nValues; i++) {
+            Utils.swap(v, 0, --heapSize);
+            Heap.minHeapify(v, 0, 0, heapSize, cmp);
+        }
 
-        for (int i = 0; i < size; i++) {
+        int[] result = new int[nValues];
+
+        for (int i = 0; i < nValues; i++) {
             result[i] = v[r--];
         }
 
@@ -138,7 +147,7 @@ public class Arrays {
             return null;
         }
 
-        BinarySearch.Position p = BinarySearch.findNearest0(v, l, r, word, new StringPrefixComparator());
+        BinarySearch.Position p = BinarySearch.findNearest(v, l, r, word, new StringPrefixComparator());
 
         return v[p.getDif() == word.length() ? r : p.getIdx()];
     }
