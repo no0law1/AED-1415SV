@@ -56,11 +56,8 @@ public class Iterables {
                 if(foundNext) return true;
                 for(;;){
                     while (curr != null && curr.next != null) {
-                        if (!curr.key.equals(curr.next.key)) {
-                            curr = curr.next;
-                            return foundNext = true;
-                        }
                         curr = curr.next;
+                        return foundNext = true;
                     }
                     currPos += 1;
                     if(currPos >= hashMap.length) return false;
