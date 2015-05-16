@@ -78,30 +78,27 @@ public class ListUtils {
         int heapSize = lists.length;
         Heap.buildMinHeap(lists, heapSize, ncmp);
 
-        Node currentNode = lists[0];
+        Node currentNode = null;
         int count = 0;
 
-        for(;lists[0] != null;){
-            if(ncmp.compare(currentNode, lists[0]) == 0){
-                count++;
-            }
-            else{
+        for(;;){
+            if(ncmp.compare(currentNode, lists[0]) != 0){
                 if(count >= k){
                     removeFromList(currentNode);
                     addToList(returnList, currentNode);
                 }
+                if(lists[0] == null) break;
                 currentNode = lists[0];
                 count = 1;
+            }
+            else{
+                count++;
             }
             lists[0] = lists[0].next;
             Heap.minHeapify(lists, 0, heapSize, ncmp);
         }
 
-        if(count >= k){
-            removeFromList(currentNode);
-            addToList(returnList, currentNode);
-        }
-
         return returnList;
     }
+
 }
