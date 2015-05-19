@@ -1,6 +1,7 @@
 package mylibrary;
 
 import mylibrary.arrays.Heap;
+import mylibrary.arrays.Utils;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -33,7 +34,15 @@ public class HeapTest {
     }
 
     public void getNBiggestOrSmallestValuesTest(int[] arr, int[] expected, boolean biggest, int nValues){
-        Heap.sort(arr, 0, 7, nValues, biggest);
+        int heapSize = arr.length;
+        if(biggest) Heap.buildMaxHeap(arr, heapSize);
+        else Heap.buildMinHeap(arr, heapSize);
+        nValues = Math.min(nValues, heapSize);
+        for (int i = 0; i < nValues; i++) {
+            Utils.swap(arr, 0, --heapSize);
+            if(biggest) Heap.maxHeapify(arr, 0, heapSize);
+            else Heap.minHeapify(arr, 0, heapSize);
+        }
 
         assertArrayEquals(expected, Arrays.copyOfRange(arr, arr.length-nValues, arr.length));
     }
