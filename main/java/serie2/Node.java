@@ -8,4 +8,12 @@ public class Node<E> {
 	public Node(){}
 	public Node(E value){ this.value=value;}
 
+	/**
+	 * Test Purposes
+	 * @return
+	 */
+	@Override
+	public String toString() {
+		return value+"";
+	}
 }

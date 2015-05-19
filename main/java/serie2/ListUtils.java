@@ -9,18 +9,6 @@ import java.util.Comparator;
  */
 public class ListUtils {
 
-    /**
-     * que dada a lista simplesmente ligada sem sentinela e não circular referenciada por list, ordenada de modo crescente
-     * segundo o comparador cmp, retorna se existir, o k-ésimo maior elemento presente na lista. Caso a lista tenha menos de k
-     * elementos, o método deverá retorna null. Considere que cada objeto do tipo Node<E> tem dois campos: um value e
-     * uma referência, next. NOTA: na resolução deste exercício, apenas deverá ser utilizado o campo next da classe Node.
-
-     * @param list
-     * @param k
-     * @param cmp
-     * @param <E>
-     * @return
-     */
     public static <E> E getKBiggest(Node<E> list, int k, Comparator<E> cmp) {
         //TODO: Don't understand the concept of the problem
         if (k > 0) {
@@ -45,17 +33,21 @@ public class ListUtils {
 
         Node<E> aux = result;
         Node<E> toBeSearched = lists[0];
-        int numberOfTimes = 0;
 
-        while(lists[0]!=null){
-            lists[0] = lists[0].next;
+        int numberOfTimes = 1;
+        int size = lists.length - 1;
 
-            //TODO: Something wrong. cmp and null values
-            Heap.sort(lists, 0, lists.length-1, (i1, i2)->(cmp.compare(i1.value, i2.value)));
+        Heap.sort(lists, 0, size, (i1, i2) -> {
+            if (i1 == null) return Integer.MAX_VALUE;
+            if (i2 == null) return Integer.MIN_VALUE;
+            return (cmp.compare(i1.value, i2.value));
+        });
 
+        while (lists[0] != null){
             Node<E> recurrentSearch = lists[0];
-            if(recurrentSearch.value.equals(toBeSearched.value)) {
+            if(cmp.compare(recurrentSearch.value, toBeSearched.value) == 0) {
                 numberOfTimes++;
+                lists[0] = lists[0].next;
             } else{
                 if(numberOfTimes >= k){
                     Node<E> onlyOnce = new Node<>(toBeSearched.value);
@@ -63,12 +55,23 @@ public class ListUtils {
                     onlyOnce.previous = aux;
                     aux.next.previous = onlyOnce;
                     aux.next = onlyOnce;
+
+                    aux = aux.next;
                 }
-                numberOfTimes = 0;
+                numberOfTimes = 1;
                 toBeSearched = lists[0];
             }
 
+            if(lists[0] == null){
+                lists[0] = lists[size--];
+            }
+
+            Heap.sort(lists, 0, size, (i1, i2) -> {
+                if (i1 == null) return Integer.MAX_VALUE;
+                if (i2 == null) return Integer.MIN_VALUE;
+                return (cmp.compare(i1.value, i2.value));
+            });
         }
-        return aux;
+        return result;
     }
 }
