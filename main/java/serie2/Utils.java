@@ -29,6 +29,19 @@ public class Utils {
     }
 
     public static<K,V> void replace(HashNode<K,V>[] hashMap, HashNode<K,V> list){
+        int hashingSize = hashMap.length;
 
+        while(list != null) {
+            int i = list.key.hashCode() % hashingSize;
+            HashNode<K,V> aux = hashMap[i];
+            while (aux != null){
+                if(aux.key.equals(list.key)){
+                    aux.value = list.value;
+                    break;
+                }
+                aux = aux.next;
+            }
+            list = list.next;
+        }
     }
 }
