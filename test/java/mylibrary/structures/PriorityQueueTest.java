@@ -101,6 +101,7 @@ public class PriorityQueueTest {
 
     @Test
     public void testMeld() throws Exception {
-
+        PriorityQueue<String> queue1 = new PriorityQueue<>();
+        PriorityQueue<String> queue2 = new PriorityQueue<>();
     }
 }

@@ -69,6 +69,11 @@ public class PriorityQueue<E> {
         return null;
     }
 
+    /**
+     * Not lg(n)
+     * @param key
+     * @param prio
+     */
     public void update(int key, int prio){
         Integer aux = 0;
         for (int i = 0; i < size; i++) {
@@ -87,6 +92,10 @@ public class PriorityQueue<E> {
         throw new IllegalArgumentException("No Such key to update");
     }
 
+    /**
+     * Not lg(n)
+     * @param key
+     */
     public void remove(int key){
         int i = 0;
         for (; i < size; i++) {
@@ -98,9 +107,31 @@ public class PriorityQueue<E> {
         decreaseKey(i);
     }
 
+    /**
+     * Can't see priority of values of queue1 and queue2 to add to Priority Queue to return.
+     *
+     * @param queue1
+     * @param queue2
+     * @param category
+     * @param categoryExtractor
+     * @return
+     */
     public PriorityQueue<E> meld(PriorityQueue<E> queue1,PriorityQueue<E> queue2, String category, CategoryExtractor<E> categoryExtractor){
-        //TODO: Method
-        return null;
+        PriorityQueue<E> result = new PriorityQueue<>();
+
+        while(queue1.peek()!=null && queue2.peek()!=null){
+            E value1, value2;
+            while(queue1.peek()!=null && categoryExtractor.getValue(value1 = queue1.poll()) != category);
+            while(queue2.peek()!=null && categoryExtractor.getValue(value2 = queue2.poll()) != category);
+
+            //TODO:
+
+            value1 = value2 = null;
+        }
+
+
+
+        return result;
     }
 
     private void decreaseKey(int index) {
