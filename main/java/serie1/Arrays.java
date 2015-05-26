@@ -44,8 +44,7 @@ public class Arrays {
     }
 
     /**
-     * Difference to number comparator as we need the n smaller difference, the comparation is inverted to turn the
-     * maxHeap algorithm into minHeap
+     * Difference to number comparator
      */
     private static class DiffComparator implements Comparator<Integer> {
         private Integer x;
@@ -60,7 +59,7 @@ public class Arrays {
     }
 
     /**
-     * Implementation O(n.lg(n))
+     * Implementation O(k.lg(n))
      *
      * @param v array to search
      * @param l first position to search
@@ -77,7 +76,6 @@ public class Arrays {
         int heapSize = r-l+1;
         int nValues = Math.min(k, heapSize);
 
-//        Heap.maxHeapSort(v, l, r, size, new DiffComparator(x));     //O(n.lg(n))
         DiffComparator cmp = new DiffComparator(x);
 
         Heap.buildMinHeap(v, 0, heapSize, cmp);
@@ -104,33 +102,32 @@ public class Arrays {
      */
     public static int median(int[] v, int l, int r) {
         int nElems = r-l + 1;
-        int med = l+(r-l)/2;
+        int lesser = l+(r-l)/2;
+        int greater = lesser;
 
         if(nElems %2 == 0){
-            QuickSort.grantFinalPositions(v, l, r, med, med+1, Integer::compareTo);
-            return (v[med] + v[med+1]) / 2;
+            greater +=1;
         }
 
-        QuickSort.grantFinalPositions(v, l, r, med, med, Integer::compareTo);
-        return v[med];
+        QuickSort.grantPivotAtPositions(v, l, r, lesser, greater, Integer::compareTo);
+        return (v[lesser] + v[greater]) / 2;
     }
 
     private static class StringPrefixComparator implements Comparator<String>{
         @Override
         public int compare(String o1, String o2) {
-            for(int i =0; i<Math.min(o1.length(), o2.length()); i++){
+            for(int i = 0; i < Math.min( o1.length(), o2.length()); i++){
                 if(o1.charAt(i) < o2.charAt(i))
-                    return (o1.length()-i)*-1;
+                    return ( o1.length() - i ) * -1;
                 if(o1.charAt(i) > o2.charAt(i))
-                    return o1.length()-i;
-
+                    return o1.length() - i;
             }
             return 0;
         }
     }
 
     /**
-     * Implementation - O(n*k)
+     * Implementation - O(k*log(n))
      * n = array length
      * k = word length
      *

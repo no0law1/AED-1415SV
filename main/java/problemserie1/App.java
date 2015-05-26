@@ -1,9 +1,10 @@
 package problemserie1;
 
+import problemserie1.filehandling.InputFileHeap;
 import problemserie1.filehandling.InputFile;
 import problemserie1.filehandling.OutputFile;
 
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Arrays;
 
 /**
@@ -27,7 +28,7 @@ public class App {
     private String[] sourceFiles;
     int nSourceFiles;
     OutputFile of;
-    InputFile inputFiles[];
+    InputFileHeap inputFileHeap;
     long nlines;
 
     public App(int ith, String outputFile, String[] sourceFiles){
@@ -39,17 +40,16 @@ public class App {
         this.ith = ith;
         this.outputFile = outputFile;
         this.sourceFiles = sourceFiles;
-        inputFiles = new InputFile[nSourceFiles];
+        inputFileHeap = new InputFileHeap(nSourceFiles);
     }
 
     public void mergeFiles() throws FileNotFoundException{
         of = new OutputFile(outputFile);
 
         nlines = 0;
+        long startTime = System.currentTimeMillis();
 
         System.out.println("Processing files ... this can take a while");
-
-        long startTime = System.currentTimeMillis();
 
         prepareInputFiles();
         processWords();
@@ -59,49 +59,24 @@ public class App {
     }
 
     private void processWords(){
-        int smallestWord = 0;
-
-        for(;;) {
-            int i = 0;
-            for (; i < nSourceFiles; i++) {
-                if (inputFiles[i].getCurrentLine().getIthWord() != null) {
-                    smallestWord = i++;
-                    break;
-                }
-            }
-
-            for (; i < nSourceFiles; i++) {
-                if (inputFiles[i].getCurrentLine().getIthWord() != null &&
-                        inputFiles[i].getCurrentLine().getIthWord().compareTo(
-                                inputFiles[smallestWord].getCurrentLine().getIthWord()) < 0) {
-                    smallestWord = i;
-                }
-            }
-            if(inputFiles[smallestWord].getCurrentLine().getIthWord() == null) break;
-            of.writeln(inputFiles[smallestWord].getCurrentLine().getText());
-            inputFiles[smallestWord].processNextAcceptedLine();
+        String line;
+        while((line = inputFileHeap.getNextLine()) != null) {
+            of.writeln(line);
             nlines++;
         }
     }
 
     private void prepareInputFiles() throws FileNotFoundException{
         for(int i = 0; i<nSourceFiles; i++){
-            inputFiles[i] = new InputFile(sourceFiles[i], ith, System.lineSeparator());
+            inputFileHeap.addValue(new InputFile(sourceFiles[i], ith, System.lineSeparator()));
         }
     }
 
     private void closeFiles(){
-//        if(of != null){
-            of.close();
-            of = null;
-//        }
+        of.close();
+        of = null;
 
-        for(int i = 0; i<nSourceFiles; i++){
-//            if(inputFiles[i] != null) {
-                inputFiles[i].close();
-                inputFiles[i] = null;
-//            }
-        }
+        inputFileHeap.close();
     }
 
     /**

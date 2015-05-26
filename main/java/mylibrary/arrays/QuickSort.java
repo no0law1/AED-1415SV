@@ -61,19 +61,19 @@ public class QuickSort {
         sort(v, i + 1, right, c);
     }
 
-    public static void grantFinalPositions(int[] v, int left, int right, int lesser, int greater, Comparator<Integer> c) {
+    public static void grantPivotAtPositions(int[] v, int left, int right, int lesserPivotPos, int greaterPivotPos, Comparator<Integer> c) {
         if (right <= left) return;
         int i = partition(v, left, right, c);
 
-        if(i < greater) {
-            grantFinalPositions(v, i + 1, right, lesser, greater, c);
+        if(i < greaterPivotPos) {
+            grantPivotAtPositions(v, i + 1, right, lesserPivotPos, greaterPivotPos, c);
         }
-        else if (i > lesser) {
-            grantFinalPositions(v, left, i - 1, lesser, greater, c);
+        else if (i > lesserPivotPos) {
+            grantPivotAtPositions(v, left, i - 1, lesserPivotPos, greaterPivotPos, c);
         }
     }
 
-    private static int partition(int[] v, int l, int r, Comparator<Integer> c) {
+    public static int partition(int[] v, int l, int r, Comparator<Integer> c) {
         int x = v[r];
         int i = l - 1;
         for (int j = l; j < r; j++) {

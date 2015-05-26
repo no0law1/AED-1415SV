@@ -91,7 +91,7 @@ public class BinarySearch {
         int dif = Math.abs(compRes);
 
         Position pos = findNearest(v, l, r, x, c);
-        if (pos.idx == -1 || pos.dif > dif) {
+        if (pos.idx == -1 || pos.dif > dif){
             pos.idx = med;
             pos.dif = dif;
         }

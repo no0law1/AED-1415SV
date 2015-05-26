@@ -31,6 +31,12 @@ public class MedianTest {
 	}
 
 	@Test
+	public void getMedian_onArrayWithParNumberOfElements2(){
+		int[] array={70,60,50,30,20,10,9,7,6,5,4,2,1,0};
+		assertEquals(8,median(array,0,array.length-1));
+	}
+
+	@Test
 	public void getMedian_onArrayWithParNumberOfElementsAndNotFinishedSorting(){
 		int[] array = {5, 0, 2, 7, 1, 6, 3, 8};
 		assertEquals(4, median(array, 0, array.length-1));
