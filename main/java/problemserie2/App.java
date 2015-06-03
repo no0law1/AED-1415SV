@@ -1,5 +1,6 @@
 package problemserie2;
 
+import mylibrary.structures.HashMap;
 import mylibrary.structures.PriorityQueue;
 import problemserie2.commands.AddCommand;
 import problemserie2.commands.ChangePriorityCommand;
@@ -9,7 +10,6 @@ import problemserie2.commands.factory.CommandInterface;
 import problemserie2.commands.factory.Option;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -40,15 +40,17 @@ public class App {
         System.out.println("3. Remove from queue");
         System.out.println("4. Show Highest Product Priority");
         //System.out.println("5. Meld two queues");
+        System.out.println("6. Exit");
     }
 
     private void run() throws IOException {
         Scanner scn = new Scanner(System.in);
         Option opt;
         do{
-            displayMenu();
+            this.displayMenu();
             int result = scn.nextInt();
             opt = Option.values()[result];
+            commands.get(opt).execute();
             System.in.read();
         }while(opt != Option.Exit);
     }

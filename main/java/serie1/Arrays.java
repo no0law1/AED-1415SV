@@ -130,25 +130,20 @@ public class Arrays {
     }
 
     /**
-     * Implementation - O(n*k)
-     * n = array length
-     * k = word length
      *
      * @param v    Array of strings
      * @param l    Beginning of search
      * @param r    End of search
      * @param word Word to search in array {@code v}
      * @return The word in array {@code v} that has a greater common prefix with {@code word}.
-     *
-     * Binary Search
      */
     public static String greaterCommonPrefix(String[] v, int l, int r, String word) {
         if (v.length < 1 || r < l) {
             return null;
         }
 
-        BinarySearch.Position p = BinarySearch.findNearest(v, l, r, word, new StringPrefixComparator());
+        BinarySearch.Position position = BinarySearch.findNearest(v, l, r, word, new StringPrefixComparator());
 
-        return v[p.getDif() == word.length() ? r : p.getIdx()];
+        return v[position.getDif() == word.length() ? r : position.getIdx()];
     }
 }
