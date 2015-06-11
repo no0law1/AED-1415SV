@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
  */
 public class Iterables {
 
-    public static Iterable<Integer> getValuesBetween(Iterable<Integer> src, int l, int r){
+    public static Iterable<Integer>getValuesBetween(Iterable<Integer> src, int l, int r){
         return () -> new Iterator<Integer>() {
             private Integer curr = null;
             private Iterator<Integer> iterator = src.iterator();
@@ -47,37 +47,39 @@ public class Iterables {
 
     public static<K,V> Iterable<K> getKeys(HashNode<K,V>[] hashMap){
         return () -> new Iterator<K>() {
-            HashNode<K, V> curr = null;
-            private int currPos = -1;
-            private boolean foundNext = false;
+            K curr = null;
+            int i = 0;
 
             @Override
             public boolean hasNext() {
-                if(foundNext) return true;
-                for(;;){
-                    while (curr != null && curr.next != null) {
-                        curr = curr.next;
-                        return foundNext = true;
-                    }
-                    currPos += 1;
-                    if(currPos >= hashMap.length) return false;
-                    curr = hashMap[currPos];
-                    if(curr != null) return foundNext = true;
+                if(curr != null){
+                    return true;
                 }
+                while (i < hashMap.length) {
+                    if(hashMap[i] == null){
+                        i++;
+                    } else {
+                        curr = hashMap[i].key;
+                        hashMap[i] = hashMap[i].next;
+                        return true;
+                    }
+                }
+                return false;
             }
 
             @Override
             public K next() {
                 if(hasNext()){
-                    foundNext = false;
-                    return curr.key;
+                    K aux = curr;
+                    curr = null;
+                    return aux;
                 }
-                return null;
+                throw new NoSuchElementException("getValuesBetween:Iterator - no such element");
             }
 
             @Override
             public void remove() {
-                throw new UnsupportedOperationException("getKeys:Iterator - remove not supported");
+                throw new UnsupportedOperationException("getValuesBetween:Iterator - remove not supported");
             }
         };
     }

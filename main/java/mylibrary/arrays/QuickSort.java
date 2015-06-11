@@ -73,7 +73,7 @@ public class QuickSort {
         }
     }
 
-    public static int partition(int[] v, int l, int r, Comparator<Integer> c) {
+    private static int partition(int[] v, int l, int r, Comparator<Integer> c) {
         int x = v[r];
         int i = l - 1;
         for (int j = l; j < r; j++) {
