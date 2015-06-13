@@ -6,12 +6,12 @@ package mylibrary.structures;
  */
 public class PriorityQueue<E> {
     public interface CategoryExtractor<E> {
-        public String getValue(E e);
+        String getValue(E e);
     }
 
-    public class Node<E>{
+    public static class Node<E>{
         E value;
-        Integer prio;   /** Defining priority. 10 most urgent, 0 less urgent */
+        Integer prio;   /** Defining priority. 10 less urgent, 0 most urgent */
         int key;        /** Key -> HashCode */
 
         public Node(E value, Integer prio){
@@ -19,7 +19,18 @@ public class PriorityQueue<E> {
             key = this.value.hashCode();
             this.prio = prio;
         }
+
+        @Override
+        public String toString() {
+            return key+" : "+value.toString();
+        }
     }
+
+    /**
+     * Key, key of node, ie. hashcode.
+     * Value, index on queue.
+     */
+    private HashMap<Integer, Integer> map;
 
     private static final int DEFAULT_CAPACITY = 32;
 
@@ -29,6 +40,7 @@ public class PriorityQueue<E> {
     @SuppressWarnings("unchecked")
     public PriorityQueue(int capacity){
         queue = (Node<E>[]) new Node[capacity];
+        map = new HashMap<>(capacity);
         size = 0;
     }
 
@@ -50,45 +62,52 @@ public class PriorityQueue<E> {
             grow();
         }
         Node<E> toAdd = new Node<>(elem, prio);
-        increaseKey(size, toAdd);
+        map.put(toAdd.key, size);
+        queue[size] = toAdd;
+        increaseKey(size);
         size++;
 
         return toAdd.key;
     }
 
-    public E peek(){
-        return size>0 ? queue[0].value : null;
+    private Node<E> peekNode(){
+        return size>0 ? queue[0] : null;
     }
 
-    public E poll(){
+    public E peek(){
+        Node<E> peekNode = peekNode();
+        return peekNode == null ? null : peekNode.value;
+    }
+
+    private Node<E> pollNode(){
         if(size > 0) {
             Node<E> aux = queue[0];
             remove(queue[0].key);
-            return aux.value;
+            return aux;
         }
         return null;
     }
 
-    /**
-     * Not lg(n)
-     * @param key
-     * @param prio
-     */
-    public void update(int key, int prio){
-        Integer aux = 0;
-        for (int i = 0; i < size; i++) {
-            if(key == queue[i].key){
-                aux = queue[i].prio;
-                queue[i].prio = prio;
+    public E poll(){
+        Node<E> pollNode = pollNode();
+        return pollNode == null ? null : pollNode.value;
+    }
 
-                if(aux.compareTo(prio) > 0){
-                    decreaseKey(i);
-                } else {
-                    increaseKey(i, queue[i]);
-                }
-                return;
+    public void update(int key, int prio) {
+        Integer index = map.get(key);
+
+        if (index != null) {
+            Integer aux = queue[index].prio;
+            queue[index].prio = prio;
+
+            if (aux.compareTo(prio) < 0) {
+                decreaseKey(index);
+            } else {
+                increaseKey(index);
             }
+            return;
         }
+
         throw new IllegalArgumentException("No Such key to update");
     }
 
@@ -97,71 +116,71 @@ public class PriorityQueue<E> {
      * @param key
      */
     public void remove(int key){
-        int i = 0;
-        for (; i < size; i++) {
-            if(key == queue[i].key){
-                queue[i] = queue[--size];
-                break;
-            }
+        Integer i = map.get(key);
+        if(i != null){
+            queue[i] = queue[--size];
+            map.put(queue[size].key, i);
+            decreaseKey(i);
+            map.remove(key);
         }
-        decreaseKey(i);
     }
 
-    /**
-     * Can't see priority of values of queue1 and queue2 to add to Priority Queue to return.
-     *
-     * @param queue1
-     * @param queue2
-     * @param category
-     * @param categoryExtractor
-     * @return
-     */
-    public PriorityQueue<E> meld(PriorityQueue<E> queue1,PriorityQueue<E> queue2, String category, CategoryExtractor<E> categoryExtractor){
+    public static <E> PriorityQueue<E> meld(PriorityQueue<E> queue1, PriorityQueue<E> queue2, String category, CategoryExtractor<E> categoryExtractor){
         PriorityQueue<E> result = new PriorityQueue<>();
 
-        while(queue1.peek()!=null && queue2.peek()!=null){
-            E value1, value2;
-            while(queue1.peek()!=null && categoryExtractor.getValue(value1 = queue1.poll()) != category);
-            while(queue2.peek()!=null && categoryExtractor.getValue(value2 = queue2.poll()) != category);
-
-            //TODO:
-
-            value1 = value2 = null;
-        }
-
-
+        extractAllIfSameCategory(result, queue1, category, categoryExtractor);
+        extractAllIfSameCategory(result, queue2, category, categoryExtractor);
 
         return result;
+    }
+
+    private static <E> void extractAllIfSameCategory(PriorityQueue<E> dst, PriorityQueue<E> src, String category, CategoryExtractor<E> categoryExtractor){
+        Node<E> node;
+        while((node = src.pollNode()) != null){
+            extractIfSameCategory(dst, node, category, categoryExtractor);
+        }
+    }
+
+    private static <E> void extractIfSameCategory(PriorityQueue<E> dst, Node<E> node, String category, CategoryExtractor<E> categoryExtractor){
+        if(categoryExtractor.getValue(node.value).equals(category)){
+            dst.add(node.value, node.prio);
+        }
     }
 
     private void decreaseKey(int index) {
         int i, son;
         for(i = index; i*2+1 <= this.size-1; i = son) {
             son = i*2+1;
-            if(son < this.size-1 && queue[son+1].prio.compareTo(queue[son].prio) > 0){
+            if(son < this.size-1 && queue[son].prio.compareTo(queue[son+1].prio) > 0){
                 son++;
             }
-            if(queue[i].prio.compareTo(queue[son].prio) < 0){
+            if(queue[i].prio.compareTo(queue[son].prio) > 0){
                 Node aux = queue[i];
                 queue[i] = queue[son];
+                map.put(queue[son].key, i);
+
                 queue[son] = aux;
+                map.put(aux.key, son);
             }
             else
                 break;
         }
     }
 
-    private void increaseKey(int start, Node<E> p) {
+    private void increaseKey(int index) {
         int i;
-        for(i = start; i > 0 ; i = (i-1)/2) {
-            if(p.prio.compareTo(queue[(i-1)/2].prio) > 0){
+        for(i = index; i > 0 ; i = (i-1)/2) {
+            if(queue[i].prio.compareTo(queue[(i-1)/2].prio) < 0){
                 Node aux = queue[i];
+
                 queue[i] = queue[(i - 1) / 2];
+                map.put(queue[(i - 1) / 2].key, i);
+
                 queue[(i - 1) / 2] = aux;
+                map.put(aux.key, (i - 1) / 2);
             } else {
                 break;
             }
         }
-        queue[i] = p;
     }
 }

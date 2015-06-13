@@ -9,18 +9,21 @@ public class TNode<E> {
 
     public E value;
 
+    public boolean end;
+
     /**
      * Better implemented with a list
      */
     public TNode<E>[] children;
 
-    public TNode(E value){
+    public TNode(E value, boolean end){
         this.value = value;
+        this.end = end;
         children = new TNode[NUM_CHILDREN];
     }
 
     public TNode(){
-        this(null);
+        this(null, false);
     }
 
     @Override
@@ -28,10 +31,10 @@ public class TNode<E> {
         return this.value+"";
     }
 
-    public void add(E value) {
+    public void add(E value, boolean end) {
         for (int i = 0; i < children.length; i++) {
             if(children[i] == null){
-                children[i] = new TNode<>(value);
+                children[i] = new TNode<>(value, end);
                 break;
             }
         }
