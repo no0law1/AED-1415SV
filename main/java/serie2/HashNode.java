@@ -15,6 +15,9 @@ public class HashNode<K,V> {
 		key = k;
 		value = v;
 	}
-	
 
+	@Override
+	public String toString() {
+		return key.toString()+" : "+value.toString();
+	}
 }

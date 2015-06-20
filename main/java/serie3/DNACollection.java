@@ -21,7 +21,11 @@ public class DNACollection {
             char c = fragment.charAt(i);
             if(isDNAPart(c)){
                 if(aux.getChild(c) == null) {
-                    aux.add(c);
+                    if(i == fragment.length()-1){
+                        aux.add(c, true);
+                    } else {
+                        aux.add(c, false);
+                    }
                 }
                 aux = aux.getChild(c);
             }
@@ -33,6 +37,14 @@ public class DNACollection {
     }
 
     public int prefixCount(String p){
+        TNode aux = collection;
+        for (int i = 0; i < p.length(); i++) {
+            if(aux.getChild(p.charAt(i)) == null){
+                break;
+            }
+            aux = aux.getChild(p.charAt(i));
+        }
+
         //TODO
         return -1;
     }

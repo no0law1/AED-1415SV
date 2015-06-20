@@ -21,7 +21,15 @@ public class HashMap<K, V> {
     }
 
     public void put(K k, V v) {
+        if(k == null || v == null) return;
         int i = index(k);
+        // For duplicate purposes
+        for (HashNode j = hashMap[i]; j != null; j = j.next) {
+            if(j.key.equals(k)){
+                j.value = v;
+                return;
+            }
+        }
         HashNode<K,V> aux = new HashNode<>(k, v);
         aux.next = hashMap[i];
         hashMap[i] = aux;

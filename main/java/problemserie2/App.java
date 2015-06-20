@@ -2,10 +2,7 @@ package problemserie2;
 
 import mylibrary.structures.HashMap;
 import mylibrary.structures.PriorityQueue;
-import problemserie2.commands.AddCommand;
-import problemserie2.commands.ChangePriorityCommand;
-import problemserie2.commands.RemoveCommand;
-import problemserie2.commands.ShowHighPriorityCommand;
+import problemserie2.commands.*;
 import problemserie2.commands.factory.CommandInterface;
 import problemserie2.commands.factory.Option;
 
@@ -24,23 +21,26 @@ public class App {
     }
 
     private void createCommands() {
-        PriorityQueue<Product> queue = new PriorityQueue<>();
+        PriorityQueue[] queues = new PriorityQueue[8];
         commands = new HashMap<>();
-        commands.put(Option.Add, new AddCommand(queue));
-        commands.put(Option.ChangePriority, new ChangePriorityCommand(queue));
-        commands.put(Option.Remove, new RemoveCommand(queue));
-        commands.put(Option.ShowHighPriority, new ShowHighPriorityCommand(queue));
+        commands.put(Option.CreateUser, new CreateQueueCommand(queues));
+        commands.put(Option.Add, new AddCommand(queues));
+        commands.put(Option.ChangePriority, new ChangePriorityCommand(queues));
+        commands.put(Option.Remove, new RemoveCommand(queues));
+        commands.put(Option.ShowHighPriority, new ShowHighPriorityCommand(queues));
+        commands.put(Option.Meld, new MeldTwoQueuesCommand(queues));
     }
 
     private void displayMenu(){
         System.out.println("Commands");
         System.out.println();
-        System.out.println("1. Add to Queue");
-        System.out.println("2. Change priority of a product in queue");
-        System.out.println("3. Remove from queue");
-        System.out.println("4. Show Highest Product Priority");
-        //System.out.println("5. Meld two queues");
-        System.out.println("6. Exit");
+        System.out.println("1. Create User");
+        System.out.println("2. Add to Queue");
+        System.out.println("3. Change priority of a product in queue");
+        System.out.println("4. Remove from queue");
+        System.out.println("5. Show Highest Product Priority");
+        System.out.println("6. Meld two queues");
+        System.out.println("7. Exit");
     }
 
     private void run() throws IOException {

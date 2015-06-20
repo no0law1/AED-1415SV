@@ -6,6 +6,8 @@ package problemserie2;
  */
 public class Product {
 
+    private static int ID_Default = 0;
+
     private int id;
 
     private String category;
@@ -16,8 +18,8 @@ public class Product {
 
     private float actualValue;
 
-    public Product(int id, String category, String agency, float buyValue, float actualValue){
-        this.id = id;
+    public Product(String category, String agency, float buyValue, float actualValue){
+        this.id = ID_Default++;
         this.category = category;
         this.agency = agency;
         this.buyValue = buyValue;
@@ -45,8 +47,16 @@ public class Product {
         return actualValue;
     }
 
+    /**
+     * Loss Value must be minor than 0
+     * @return Loss Value (buyValue - actualValue)
+     */
+    public float getLossValue(){
+        return buyValue - actualValue;
+    }
+
     @Override
     public String toString() {
-        return "Product number: "+id+", category: "+category+", from agency "+agency;
+        return "Product number: "+id+", category: "+category+", from agency "+agency+" Loss Value: "+getLossValue();
     }
 }
