@@ -5,7 +5,16 @@ package serie3.graphs;
  */
 public class Vertex {
 
-    private int id;
+    public int id;
 
-    private Edge edge;
+    public int color;
+
+    public int distance;
+
+    public int finish;
+
+    public Vertex predecessor;
+
+    public Edge adjList;
+
 }

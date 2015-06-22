@@ -14,7 +14,17 @@ public class DNACollectionTest {
         DNACollection dna = new DNACollection();
         dna.add("ACTG");
         dna.add("ACG");
+    }
 
+    /**
+     * Needs better implementation.
+     *  run string to see all chars before?
+     * @throws Exception
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testAddToFix() throws Exception {
+        DNACollection dna = new DNACollection();
+        dna.add("ACTF");
     }
 
     @Test
@@ -25,6 +35,6 @@ public class DNACollectionTest {
         dna.add("AGTC");
 
         assertEquals(3, dna.prefixCount("A"));
-        assertEquals(0, dna.prefixCount("G"));
+        assertEquals(1, dna.prefixCount("ACTG"));
     }
 }

@@ -5,48 +5,112 @@ package serie3;
  */
 public class DNACollection {
 
-    private TNode<Character> collection;
+    private static class TNode{
+        private static final int NUM_CHILDREN = 4;
 
-    public DNACollection(){
-        collection = new TNode<>();
+        Character value;
+
+        boolean end;
+
+        /**
+         * Better implemented with a list
+         */
+        TNode[] children;
+
+        public TNode(Character value, boolean end){
+            this.value = value;
+            this.end = end;
+            children = new TNode[NUM_CHILDREN];
+        }
+
+        public TNode(){
+            this(null, false);
+        }
+
+        @Override
+        public String toString() {
+            return value.toString();
+        }
     }
 
-    /**
-     *
-     * @param fragment indicated as AACT ...
-     */
-    public void add(String fragment){
-        TNode aux = collection;
-        for (int i = 0; i < fragment.length(); i++) {
-            char c = fragment.charAt(i);
-            if(isDNAPart(c)){
-                if(aux.getChild(c) == null) {
-                    if(i == fragment.length()-1){
-                        aux.add(c, true);
-                    } else {
-                        aux.add(c, false);
-                    }
-                }
-                aux = aux.getChild(c);
-            }
-        }
+    private TNode collection;
+
+    public DNACollection(){
+        collection = new TNode();
     }
 
     private boolean isDNAPart(char c) {
         return c == 'A' || c == 'C' || c == 'G' || c == 'T';
     }
 
+    public void add(String fragment){
+        TNode aux = collection;
+        for (int i = 0; i < fragment.length(); i++) {
+            char code = fragment.charAt(i);
+            if(!isDNAPart(code)){
+                throw new IllegalArgumentException();
+                //break; Ficaria mal, uma child sem fim.
+            }
+            int childIndex;
+            if((childIndex = childrenIsAlreadyInCollection(aux.children, code)) != -1) {
+                aux = aux.children[childIndex];
+            } else {
+                aux = addToChildren(aux.children, code, i == fragment.length()-1);
+            }
+        }
+
+    }
+
+    private TNode addToChildren(TNode[] children, char code, boolean end) {
+        for (int i = 0; i < children.length; i++) {
+            if(children[i] == null){
+                children[i] = new TNode(code, end);
+                return children[i];
+            }
+        }
+        throw new IllegalStateException("If reached, code is wrong! ");
+    }
+
+    private int childrenIsAlreadyInCollection(TNode[] children, char code) {
+        for (int i = 0; i < children.length; i++) {
+            if(children[i] == null){
+                break;
+            }
+            if(children[i].value == code){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public int prefixCount(String p){
         TNode aux = collection;
         for (int i = 0; i < p.length(); i++) {
-            if(aux.getChild(p.charAt(i)) == null){
-                break;
+            char code = p.charAt(i);
+            if(!isDNAPart(code)){
+                throw new IllegalArgumentException();
             }
-            aux = aux.getChild(p.charAt(i));
+            int childIndex;
+            if((childIndex = childrenIsAlreadyInCollection(aux.children, code)) != -1) {
+                aux = aux.children[childIndex];
+            } else {
+                return -1;
+            }
         }
 
-        //TODO
-        return -1;
+        return prefixCountRecursive(aux);
+    }
+
+    private int prefixCountRecursive(TNode aux) {
+        int i = 0;
+        if(aux == null){
+            return 0;
+        }
+        if(aux.end){
+            i = 1;
+        }
+        return i + prefixCountRecursive(aux.children[0]) + prefixCountRecursive(aux.children[1])
+                + prefixCountRecursive(aux.children[2]) + prefixCountRecursive(aux.children[3]);
     }
 
 }
