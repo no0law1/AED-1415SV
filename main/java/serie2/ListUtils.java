@@ -45,39 +45,25 @@ public class ListUtils {
         list.previous = node;
     }
 
-    private static class NodeComparator<E> implements Comparator<Node<E>>{
-
-        private Comparator<E> cmp;
-
-        public NodeComparator(Comparator<E> cmp){
-            if(cmp == null)
-                throw new IllegalArgumentException("cmp can't be null");
-            this.cmp = cmp;
-        }
-
-        @Override
-        public int compare(Node<E> o1, Node<E> o2) {
-            if(o1 == null) return Integer.MAX_VALUE;
-            if(o2 == null) return Integer.MIN_VALUE;
-            return cmp.compare(o1.value, o2.value);
-        }
-    }
-
     public static <E> Node<E> occurAtLeastKTimes(Node<E>[] lists, Comparator<E> cmp, int k) {
 
-        NodeComparator ncmp = new NodeComparator(cmp);
+        Comparator<Node<E>> newCmp = (i1, i2) -> {
+            if (i1 == null) return Integer.MAX_VALUE;
+            if (i2 == null) return Integer.MIN_VALUE;
+            return (cmp.compare(i1.value, i2.value));
+        };
 
         Node<E> returnList = new Node<>();
         returnList.next = returnList.previous = returnList;
 
         int heapSize = lists.length;
-        Heap.buildMinHeap(lists, heapSize, ncmp);
+        Heap.buildMinHeap(lists, heapSize, newCmp);
 
         Node currentNode = null;
         int count = 0;
 
         for(;;){
-            if(ncmp.compare(currentNode, lists[0]) != 0){
+            if(newCmp.compare(currentNode, lists[0]) != 0){
                 if(count >= k){
                     removeFromList(currentNode);
                     addToList(returnList, currentNode);
@@ -90,7 +76,7 @@ public class ListUtils {
                 count++;
             }
             lists[0] = lists[0].next;
-            Heap.minHeapify(lists, 0, heapSize, ncmp);
+            Heap.minHeapify(lists, 0, heapSize, newCmp);
         }
 
         return returnList;
