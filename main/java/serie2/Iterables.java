@@ -74,12 +74,12 @@ public class Iterables {
                     curr = null;
                     return aux;
                 }
-                throw new NoSuchElementException("getValuesBetween:Iterator - no such element");
+                throw new NoSuchElementException("getKeys - no such element");
             }
 
             @Override
             public void remove() {
-                throw new UnsupportedOperationException("getValuesBetween:Iterator - remove not supported");
+                throw new UnsupportedOperationException("getKeys:Iterator - remove not supported");
             }
         };
     }
