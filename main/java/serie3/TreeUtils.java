@@ -17,7 +17,8 @@ public class TreeUtils {
             return true;
         }
 
-        return hasPathWithAtLeastSumRecursive(root.left, sum, accumulator + root.value) || hasPathWithAtLeastSumRecursive(root.right, sum, accumulator + root.value);
+        return hasPathWithAtLeastSumRecursive(root.left, sum, accumulator + root.value)
+                || hasPathWithAtLeastSumRecursive(root.right, sum, accumulator + root.value);
     }
 
     private static int leafLevel = 0;

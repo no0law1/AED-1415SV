@@ -42,12 +42,8 @@ public class PriorityQueue<E> {
 
     private Comparator<Integer> cmp;
 
-    @SuppressWarnings("unchecked")
-    public PriorityQueue(int capacity, Comparator<Integer> cmp){
-        queue = (Node<E>[]) new Node[capacity];
-        map = new HashMap<>(capacity);
-        size = 0;
-        this.cmp = cmp;
+    public PriorityQueue(Comparator<Integer> cmp){
+        this(DEFAULT_CAPACITY, cmp);
     }
 
     @SuppressWarnings("unchecked")
@@ -56,7 +52,15 @@ public class PriorityQueue<E> {
     }
 
     public PriorityQueue(){
-        this(DEFAULT_CAPACITY);
+        this(DEFAULT_CAPACITY, null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public PriorityQueue(int capacity, Comparator<Integer> cmp){
+        queue = (Node<E>[]) new Node[capacity];
+        map = new HashMap<>(capacity);
+        size = 0;
+        this.cmp = cmp;
     }
 
     @SuppressWarnings({"unchecked", "ManualArrayCopy"})

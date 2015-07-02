@@ -1,11 +1,23 @@
 package serie3.graphs;
 
 /**
- *
+ *  Aresta
  */
 public class Edge {
 
-    private Vertex adjacent;
+    public Edge next;
 
-    private Edge next;
+    public Vertex adjacent;
+
+    public double weight;
+
+    public Edge(Vertex adj, double weight){
+        this(adj, weight, null);
+    }
+
+    public Edge(Vertex adj, double weight, Edge next){
+        this.adjacent = adj;
+        this.weight = weight;
+        this.next = next;
+    }
 }

@@ -56,13 +56,12 @@ public class Iterables {
                     return true;
                 }
                 while (i < hashMap.length) {
-                    if(hashMap[i] == null){
-                        i++;
-                    } else {
+                    if (hashMap[i] != null) {
                         curr = hashMap[i].key;
                         hashMap[i] = hashMap[i].next;
                         return true;
                     }
+                    i++;
                 }
                 return false;
             }
