@@ -85,27 +85,17 @@ public class PriorityQueue<E> {
         return toAdd.key;
     }
 
-    private Node<E> peekNode(){
-        return size>0 ? queue[0] : null;
-    }
-
     public E peek(){
-        Node<E> peekNode = peekNode();
-        return peekNode == null ? null : peekNode.value;
-    }
-
-    private Node<E> pollNode(){
-        if(size > 0) {
-            Node<E> aux = queue[0];
-            remove(queue[0].key);
-            return aux;
-        }
-        return null;
+        return size>0 ? queue[0].value : null;
     }
 
     public E poll(){
-        Node<E> pollNode = pollNode();
-        return pollNode == null ? null : pollNode.value;
+        if(size > 0) {
+            Node<E> aux = queue[0];
+            remove(queue[0].key);
+            return aux.value;
+        }
+        return null;
     }
 
     public void update(int key, int prio) {
@@ -177,16 +167,20 @@ public class PriorityQueue<E> {
     }
 
     private static <E> void extractAllIfSameCategory(PriorityQueue<E> dst, PriorityQueue<E> src, String category, CategoryExtractor<E> categoryExtractor){
-        Node<E> node;
-        while((node = src.pollNode()) != null){
-            extractIfSameCategory(dst, node, category, categoryExtractor);
+        for (int i = 0; i < src.size; i++) {
+           if(addIfCategory(dst, src.queue[i], category, categoryExtractor)){
+               src.remove(src.queue[i].key);
+               i--;
+           }
         }
     }
 
-    private static <E> void extractIfSameCategory(PriorityQueue<E> dst, Node<E> node, String category, CategoryExtractor<E> categoryExtractor){
+    private static <E> boolean addIfCategory(PriorityQueue<E> dst, Node<E> node, String category, CategoryExtractor<E> categoryExtractor){
         if(categoryExtractor.getValue(node.value).equals(category)){
             dst.add(node.value, node.prio);
+            return true;
         }
+        return false;
     }
 
     private void decreaseKey(int index) {
