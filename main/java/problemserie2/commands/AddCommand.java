@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  *
  */
-public class AddCommand extends Command implements CommandInterface{
+public class AddCommand extends Command implements CommandInterface {
 
     public AddCommand(PriorityQueue[] queue) {
         super(queue);
@@ -19,22 +19,20 @@ public class AddCommand extends Command implements CommandInterface{
     @Override
     public void execute() throws IOException {
         PriorityQueue<Product> queue = getQueue();
-        if(queue!= null) {
+        if (queue != null) {
             System.out.println("Add");
-            System.out.print("ID: ");
-            int id = Integer.parseInt(scn.nextLine());
             System.out.print("Category: ");
             String category = scn.nextLine();
             System.out.print("Agency: ");
             String agency = scn.nextLine();
             System.out.print("Buy Value: ");
-            float bValue = Float.parseFloat(scn.nextLine());
+            int bValue = Integer.parseInt(scn.nextLine());
             System.out.print("Actual Value: ");
-            float aValue = Float.parseFloat(scn.nextLine());
+            int aValue = Integer.parseInt(scn.nextLine());
 
             Product product = new Product(category, agency, bValue, aValue);
 
-            queue.add(product, (int) product.getLossValue());
+            queue.add(product, product.getLossValue());
             System.out.println(product + " added.");
         } else {
             System.out.println("No Queue");

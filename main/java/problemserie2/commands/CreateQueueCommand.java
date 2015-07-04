@@ -17,9 +17,14 @@ public class CreateQueueCommand extends Command implements CommandInterface {
 
     @Override
     public void execute() throws IOException {
-        Integer idx;
-        if((idx = getIndexOfQueue()) == null){
-            queue[idx] = new PriorityQueue();
+        Integer idx = getIndexOfQueue();
+        if(idx != null){
+            if(idx > queue.length){
+                System.out.println("Error !");
+                System.out.println("Max -> "+(queue.length-1));
+            } else {
+                queue[idx] = new PriorityQueue();
+            }
         } else {
             System.out.println("Queue already exists");
         }

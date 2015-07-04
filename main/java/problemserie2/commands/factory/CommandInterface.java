@@ -5,6 +5,6 @@ import java.io.IOException;
 /**
  *
  */
-public interface CommandInterface{
+public interface CommandInterface {
     void execute() throws IOException;
 }

@@ -124,13 +124,13 @@ public class PriorityQueueTest {
 
     private Product[] setUpForMeld() {
         return new Product[]{
-                new Product("XML", "Not Matter", 10.0f, 20.0f),
-                new Product("XML1", "Not Matter", 10.0f, 20.0f),
-                new Product("XML2", "Not Matter", 10.0f, 20.0f),
-                new Product("XML", "Not Matter", 15.0f, 20.0f),
-                new Product("XML", "Not Matter", 10.0f, 18.0f),
-                new Product("XML", "Not Matter", 10.0f, 25.0f),
-                new Product("XML3", "Not Matter", 10.0f, 25.0f)
+                new Product("XML", "Not Matter", 10, 20),
+                new Product("XML1", "Not Matter", 10, 20),
+                new Product("XML2", "Not Matter", 10, 20),
+                new Product("XML", "Not Matter", 15, 20),
+                new Product("XML", "Not Matter", 10, 18),
+                new Product("XML", "Not Matter", 10, 25),
+                new Product("XML3", "Not Matter", 10, 25)
         };
     }
 }

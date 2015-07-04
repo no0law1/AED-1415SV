@@ -39,7 +39,7 @@ public class MSTreeTest {
 
     @Test
     public void testIsEdgeInAnMSTFalse() throws Exception {
-        assertEquals(-1, isEdgeInAnMST(graph, 0, 7));
+        assertEquals(-1, isEdgeInAnMST(graph, 1, 7));
 
         assertEquals(-1, isEdgeInAnMST(graph, 5, 4));
     }

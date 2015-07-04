@@ -1,7 +1,5 @@
 package serie3.graphs;
 
-import java.util.PriorityQueue;
-
 /**
  * Minimum Spanning Tree
  */
@@ -23,8 +21,6 @@ public class MSTree {
     }
 
     /**
-     * Priority Queue of java util used,
-     * because our Priority Queue used in series 2 was not usable in this circumstances.
      *
      * @param graph     Graph.
      * @param origId    Vertex id from origin
@@ -32,7 +28,8 @@ public class MSTree {
      * @return  Don't know yet.
      */
     public static int isEdgeInAnMST(Vertex[] graph, int origId, int destId){
-        PriorityQueue<Edge> queue = new PriorityQueue<>((Edge e1, Edge e2) -> Double.compare(e1.weight, e2.weight));
+        PriorityQueue<Edge, Double> queue = new PriorityQueue<>();
+        boolean[] visited = new boolean[graph.length];
 
         Pair<Double, Vertex>[] dist = new Pair[graph.length];
         for (int i = 0; i < dist.length; i++) {
@@ -44,20 +41,27 @@ public class MSTree {
         Vertex last = graph[origId];
         Edge edge = graph[origId].adjList;
         do {
+            visited[last.id] = true;
             while (edge != null) {
-                if (dist[edge.adjacent.id].key > edge.weight) {
+                if (!visited[edge.adjacent.id] && dist[edge.adjacent.id].key > edge.weight) {
                     dist[edge.adjacent.id].key = edge.weight;
                     dist[edge.adjacent.id].value = last;
-                    queue.add(edge);
+                    queue.add(edge, edge.weight);
                 }
                 edge = edge.next;
             }
-            edge = queue.poll();
-            last = edge.adjacent;
-            edge = edge.adjacent.adjList;
+
+            do {
+                edge = queue.poll();
+                if(edge == null){
+                    break;
+                }
+                last = edge.adjacent;
+                edge = edge.adjacent.adjList;
+            } while (visited[last.id]);
         }while(!queue.isEmpty());
 
-        if (dist[destId].value != null && dist[destId].value.id == origId) {
+        if (dist[destId].value.id == origId) {
             return 1;
         }
         return -1;

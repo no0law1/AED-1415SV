@@ -18,12 +18,9 @@ public class RemoveCommand extends Command implements CommandInterface {
     public void execute() {
         PriorityQueue<Product> queue = getQueue();
         if(queue != null) {
-            if (queue.peek() == null) {
-                System.out.println("Nothing in queue");
-            } else {
-                Product prod = queue.poll();
-                System.out.println("Removed: " + prod.toString());
-            }
+            System.out.println("Key of product to remove: ");
+            Integer key = Integer.parseInt(scn.nextLine());
+            queue.remove(key);
         } else {
             System.out.println("No Queue");
         }

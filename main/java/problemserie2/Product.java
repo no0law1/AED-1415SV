@@ -14,11 +14,11 @@ public class Product {
 
     private String agency;
 
-    private float buyValue;
+    private int buyValue;
 
-    private float actualValue;
+    private int actualValue;
 
-    public Product(String category, String agency, float buyValue, float actualValue){
+    public Product(String category, String agency, int buyValue, int actualValue){
         this.id = ID_Default++;
         this.category = category;
         this.agency = agency;
@@ -39,19 +39,23 @@ public class Product {
         return agency;
     }
 
-    public float getBuyValue() {
+    public int getBuyValue() {
         return buyValue;
     }
 
-    public float getActualValue() {
+    public int getActualValue() {
         return actualValue;
+    }
+
+    public void setActualValue(int actualValue) {
+        this.actualValue = actualValue;
     }
 
     /**
      * Loss Value must be minor than 0
      * @return Loss Value (buyValue - actualValue)
      */
-    public float getLossValue(){
+    public int getLossValue(){
         return buyValue - actualValue;
     }
 

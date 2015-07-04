@@ -1,22 +1,28 @@
-package mylibrary.structures;
+package serie3.graphs;
 
+
+import mylibrary.structures.HashMap;
 
 import java.util.Comparator;
 
 /**
- *  Doubly Linked List with Sentinel and Circular (Nuno)
+ * Doubly Linked List with Sentinel and Circular (Nuno)
  */
-public class PriorityQueue<E> {
-    public interface CategoryExtractor<E> {
-        String getValue(E e);
-    }
+public class PriorityQueue<E, V> {
 
-    public static class Node<E>{
+    public static class Node<E, V> {
         E value;
-        Integer prio;   /** Defining priority. 10 less urgent, 0 most urgent */
-        int key;        /** Key -> HashCode */
+        V prio;
+        /**
+         * Defining priority. 10 less urgent, 0 most urgent
+         */
+        int key;
 
-        public Node(E value, Integer prio){
+        /**
+         * Key -> HashCode
+         */
+
+        public Node(E value, V prio) {
             this.value = value;
             key = this.value.hashCode();
             this.prio = prio;
@@ -24,7 +30,7 @@ public class PriorityQueue<E> {
 
         @Override
         public String toString() {
-            return key+" : "+value.toString();
+            return key + " : " + value.toString();
         }
     }
 
@@ -36,28 +42,28 @@ public class PriorityQueue<E> {
 
     private static final int DEFAULT_CAPACITY = 32;
 
-    private Node<E>[] queue;
+    private Node<E, V>[] queue;
 
     private int size;
 
-    private Comparator<Integer> cmp;
+    private Comparator<V> cmp;
 
-    public PriorityQueue(Comparator<Integer> cmp){
+    public PriorityQueue(Comparator<V> cmp) {
         this(DEFAULT_CAPACITY, cmp);
     }
 
     @SuppressWarnings("unchecked")
-    public PriorityQueue(int capacity){
+    public PriorityQueue(int capacity) {
         this(capacity, null);
     }
 
-    public PriorityQueue(){
+    public PriorityQueue() {
         this(DEFAULT_CAPACITY, null);
     }
 
     @SuppressWarnings("unchecked")
-    public PriorityQueue(int capacity, Comparator<Integer> cmp){
-        queue = (Node<E>[]) new Node[capacity];
+    public PriorityQueue(int capacity, Comparator<V> cmp) {
+        queue = (Node<E, V>[]) new Node[capacity];
         map = new HashMap<>(capacity);
         size = 0;
         this.cmp = cmp;
@@ -65,18 +71,18 @@ public class PriorityQueue<E> {
 
     @SuppressWarnings({"unchecked", "ManualArrayCopy"})
     private void grow() {
-        Node<E>[] aux = (Node<E>[])new Node[size*2];
+        Node<E, V>[] aux = (Node<E, V>[]) new Node[size * 2];
         for (int i = 0; i < queue.length; i++) {
-            aux[i]=queue[i];
+            aux[i] = queue[i];
         }
-        queue=aux;
+        queue = aux;
     }
 
-    public int add(E elem, int prio){
-        if(size >= queue.length){
+    public int add(E elem, V prio) {
+        if (size >= queue.length) {
             grow();
         }
-        Node<E> toAdd = new Node<>(elem, prio);
+        Node<E, V> toAdd = new Node<>(elem, prio);
         map.put(toAdd.key, size);
         queue[size] = toAdd;
         increaseKey(size);
@@ -85,32 +91,42 @@ public class PriorityQueue<E> {
         return toAdd.key;
     }
 
-    public E peek(){
-        return size>0 ? queue[0].value : null;
+    private Node<E, V> peekNode() {
+        return size > 0 ? queue[0] : null;
     }
 
-    public E poll(){
-        if(size > 0) {
-            Node<E> aux = queue[0];
+    public E peek() {
+        Node<E, V> peekNode = peekNode();
+        return peekNode == null ? null : peekNode.value;
+    }
+
+    private Node<E, V> pollNode() {
+        if (size > 0) {
+            Node<E, V> aux = queue[0];
             remove(queue[0].key);
-            return aux.value;
+            return aux;
         }
         return null;
     }
 
-    public void update(int key, int prio) {
-        if(cmp==null){
+    public E poll() {
+        Node<E, V> pollNode = pollNode();
+        return pollNode == null ? null : pollNode.value;
+    }
+
+    public void update(int key, V prio) {
+        if (cmp == null) {
             updateNoCmp(key, prio);
         } else {
             updateCmp(key, prio);
         }
     }
 
-    private void updateCmp(int key, int prio) {
+    public void updateCmp(int key, V prio) {
         Integer index = map.get(key);
 
         if (index != null) {
-            Integer aux = queue[index].prio;
+            V aux = queue[index].prio;
             queue[index].prio = prio;
 
             if (cmp.compare(aux, prio) < 0) {
@@ -124,11 +140,11 @@ public class PriorityQueue<E> {
         throw new IllegalArgumentException("No Such key to update");
     }
 
-    private void updateNoCmp(int key, int prio) {
+    public void updateNoCmp(int key, V prio) {
         Integer index = map.get(key);
 
         if (index != null) {
-            Integer aux = queue[index].prio;
+            Comparable<? super V> aux = (Comparable<? super V>) queue[index].prio;
             queue[index].prio = prio;
 
             if (aux.compareTo(prio) < 0) {
@@ -142,9 +158,9 @@ public class PriorityQueue<E> {
         throw new IllegalArgumentException("No Such key to update");
     }
 
-    public void remove(int key){
+    public void remove(int key) {
         Integer i = map.get(key);
-        if(i != null){
+        if (i != null) {
             queue[i] = queue[--size];
             map.put(queue[size].key, i);
             decreaseKey(i);
@@ -152,39 +168,12 @@ public class PriorityQueue<E> {
         }
     }
 
-    public E getValue(int key){
-        int index = map.get(key);
-        return queue[index].value;
-    }
-
-    public static <E> PriorityQueue<E> meld(PriorityQueue<E> queue1, PriorityQueue<E> queue2, String category, CategoryExtractor<E> categoryExtractor){
-        PriorityQueue<E> result = new PriorityQueue<>();
-
-        extractAllIfSameCategory(result, queue1, category, categoryExtractor);
-        extractAllIfSameCategory(result, queue2, category, categoryExtractor);
-
-        return result;
-    }
-
-    private static <E> void extractAllIfSameCategory(PriorityQueue<E> dst, PriorityQueue<E> src, String category, CategoryExtractor<E> categoryExtractor){
-        for (int i = 0; i < src.size; i++) {
-           if(addIfCategory(dst, src.queue[i], category, categoryExtractor)){
-               src.remove(src.queue[i].key);
-               i--;
-           }
-        }
-    }
-
-    private static <E> boolean addIfCategory(PriorityQueue<E> dst, Node<E> node, String category, CategoryExtractor<E> categoryExtractor){
-        if(categoryExtractor.getValue(node.value).equals(category)){
-            dst.add(node.value, node.prio);
-            return true;
-        }
-        return false;
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     private void decreaseKey(int index) {
-        if(cmp == null){
+        if (cmp == null) {
             decreaseKeyNoCmp(index);
         } else {
             decreaseKeyCmp(index);
@@ -193,46 +182,44 @@ public class PriorityQueue<E> {
 
     private void decreaseKeyCmp(int index) {
         int i, son;
-        for(i = index; i*2+1 <= this.size-1; i = son) {
-            son = i*2+1;
-            if(son < this.size-1 && cmp.compare(queue[son].prio, queue[son+1].prio) > 0){
+        for (i = index; i * 2 + 1 <= this.size - 1; i = son) {
+            son = i * 2 + 1;
+            if (son < this.size - 1 && cmp.compare(queue[son].prio, queue[son + 1].prio) > 0) {
                 son++;
             }
-            if(cmp.compare(queue[i].prio, queue[son].prio) > 0){
-                Node<E> aux = queue[i];
+            if (cmp.compare(queue[i].prio, queue[son].prio) > 0) {
+                Node<E, V> aux = queue[i];
                 queue[i] = queue[son];
                 map.put(queue[son].key, i);
 
                 queue[son] = aux;
                 map.put(aux.key, son);
-            }
-            else
+            } else
                 break;
         }
     }
 
     private void decreaseKeyNoCmp(int index) {
         int i, son;
-        for(i = index; i*2+1 <= this.size-1; i = son) {
-            son = i*2+1;
-            if(son < this.size-1 && queue[son].prio.compareTo(queue[son+1].prio) > 0){
+        for (i = index; i * 2 + 1 <= this.size - 1; i = son) {
+            son = i * 2 + 1;
+            if (son < this.size - 1 && ((Comparable<? super V>)queue[son].prio).compareTo(queue[son + 1].prio) > 0) {
                 son++;
             }
-            if(queue[i].prio.compareTo(queue[son].prio) > 0){
-                Node<E> aux = queue[i];
+            if (((Comparable<? super V>)queue[i].prio).compareTo(queue[son].prio) > 0) {
+                Node<E, V> aux = queue[i];
                 queue[i] = queue[son];
                 map.put(queue[son].key, i);
 
                 queue[son] = aux;
                 map.put(aux.key, son);
-            }
-            else
+            } else
                 break;
         }
     }
 
     private void increaseKey(int index) {
-        if(cmp == null){
+        if (cmp == null) {
             increaseKeyNoCmp(index);
         } else {
             increaseKeyCmp(index);
@@ -241,9 +228,9 @@ public class PriorityQueue<E> {
 
     private void increaseKeyCmp(int index) {
         int i;
-        for(i = index; i > 0 ; i = (i-1)/2) {
-            if(cmp.compare(queue[i].prio, queue[(i-1)/2].prio) < 0){
-                Node<E> aux = queue[i];
+        for (i = index; i > 0; i = (i - 1) / 2) {
+            if (cmp.compare(queue[i].prio, queue[(i - 1) / 2].prio) < 0) {
+                Node<E, V> aux = queue[i];
 
                 queue[i] = queue[(i - 1) / 2];
                 map.put(queue[(i - 1) / 2].key, i);
@@ -258,9 +245,9 @@ public class PriorityQueue<E> {
 
     private void increaseKeyNoCmp(int index) {
         int i;
-        for(i = index; i > 0 ; i = (i-1)/2) {
-            if(queue[i].prio.compareTo(queue[(i-1)/2].prio) < 0){
-                Node<E> aux = queue[i];
+        for (i = index; i > 0; i = (i - 1) / 2) {
+            if (((Comparable<? super V>)queue[i].prio).compareTo(queue[(i - 1) / 2].prio) < 0) {
+                Node<E, V> aux = queue[i];
 
                 queue[i] = queue[(i - 1) / 2];
                 map.put(queue[(i - 1) / 2].key, i);
