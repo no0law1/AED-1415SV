@@ -1,4 +1,4 @@
-package serie3.graphs;
+package mylibrary.structures.graphs;
 
 /**
  *  Aresta

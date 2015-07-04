@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
+import mylibrary.structures.Node;
 import org.junit.Test;
 
 public class OccurAtLeastKTimeTest {
@@ -30,7 +31,7 @@ public class OccurAtLeastKTimeTest {
 		
 	@Test
 	public void  occurAtLeastKTimes_empty_array(){
-		Node<Integer>[] array=(Node<Integer>[]) new Node[10];	
+		Node<Integer>[] array=(Node<Integer>[]) new Node[10];
 		for(int i=1; i<10; i++)
 			assertTrue(ListUtilTest.isEmptyListWithSentinel(occurAtLeastKTimes(array, CMP_NATURAL_ORDER,i)) );
 	}

@@ -1,8 +1,9 @@
 package serie2;
 
+import mylibrary.structures.Node;
+
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Random;
 
 public class ListUtilTest {
 	

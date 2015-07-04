@@ -1,5 +1,8 @@
 package serie3.graphs;
 
+import mylibrary.structures.graphs.Edge;
+import mylibrary.structures.graphs.Vertex;
+
 /**
  * Minimum Spanning Tree
  */

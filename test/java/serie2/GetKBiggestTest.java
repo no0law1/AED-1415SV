@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import mylibrary.structures.Node;
 import org.junit.Test;
 
 public class GetKBiggestTest {
@@ -22,7 +23,7 @@ public class GetKBiggestTest {
 	
 	@Test
 	public void  getKBiggest_emptyList_kSmallerThanOne(){
-		Node<Integer> list = ListUtilTest.emptyListWithoutSentinel();	
+		Node<Integer> list = ListUtilTest.emptyListWithoutSentinel();
 		assertEquals(null, getKBiggest(list, 0, CMP_NATURAL_ORDER));
 		assertEquals(null, getKBiggest(list, -1, CMP_NATURAL_ORDER));
 	}

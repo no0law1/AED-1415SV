@@ -1,4 +1,4 @@
-package serie2;
+package mylibrary.structures;
 
 public class Node<E> {
 	public E value;

@@ -1,6 +1,7 @@
 package serie2;
 
 import mylibrary.arrays.Heap;
+import mylibrary.structures.Node;
 
 import java.util.Comparator;
 
