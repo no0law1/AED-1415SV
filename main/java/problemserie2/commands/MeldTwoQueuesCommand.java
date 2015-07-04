@@ -20,7 +20,7 @@ public class MeldTwoQueuesCommand extends Command implements CommandInterface {
     public void execute() throws IOException {
         PriorityQueue<Product> queue1 = getQueue();
         PriorityQueue<Product> queue2 = getQueue();
-        if(queuesCanMeld(queue1, queue2)){
+        if (queuesCanMeld(queue1, queue2)) {
             System.out.print("Category: ");
             String category = scn.nextLine();
             PriorityQueue.meld(queue1, queue2, category, Product::getCategory);

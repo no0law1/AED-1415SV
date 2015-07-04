@@ -116,7 +116,7 @@ public class PriorityQueue<E> {
         }
     }
 
-    public void updateCmp(int key, int prio) {
+    private void updateCmp(int key, int prio) {
         Integer index = map.get(key);
 
         if (index != null) {
@@ -134,7 +134,7 @@ public class PriorityQueue<E> {
         throw new IllegalArgumentException("No Such key to update");
     }
 
-    public void updateNoCmp(int key, int prio) {
+    private void updateNoCmp(int key, int prio) {
         Integer index = map.get(key);
 
         if (index != null) {
@@ -160,6 +160,11 @@ public class PriorityQueue<E> {
             decreaseKey(i);
             map.remove(key);
         }
+    }
+
+    public E getValue(int key){
+        int index = map.get(key);
+        return queue[index].value;
     }
 
     public static <E> PriorityQueue<E> meld(PriorityQueue<E> queue1, PriorityQueue<E> queue2, String category, CategoryExtractor<E> categoryExtractor){

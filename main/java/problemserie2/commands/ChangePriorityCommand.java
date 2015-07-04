@@ -17,11 +17,15 @@ public class ChangePriorityCommand extends Command implements CommandInterface {
     @Override
     public void execute() {
         PriorityQueue<Product> queue = getQueue();
-        if(queue != null){
+        if (queue != null) {
             System.out.print("Key: ");
             Integer key = Integer.parseInt(scn.nextLine());
-            queue.remove(key);
-        } else{
+            Product product = queue.getValue(key);
+            System.out.print("Actual Value: ");
+            product.setActualValue(Integer.parseInt(scn.nextLine()));
+
+            queue.update(key, product.getLossValue());
+        } else {
             System.out.println("No Queue.");
         }
     }

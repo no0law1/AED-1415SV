@@ -28,19 +28,16 @@ public class App {
         commands.put(Option.ChangePriority, new ChangePriorityCommand(queues));
         commands.put(Option.Remove, new RemoveCommand(queues));
         commands.put(Option.ShowHighPriority, new ShowHighPriorityCommand(queues));
+        commands.put(Option.RemoveHighPriority, new RemoveHighPriorityCommand(queues));
         commands.put(Option.Meld, new MeldTwoQueuesCommand(queues));
     }
 
     private void displayMenu(){
         System.out.println("Commands");
         System.out.println();
-        System.out.println("1. Create User");
-        System.out.println("2. Add to Queue");
-        System.out.println("3. Change priority of a product in queue");
-        System.out.println("4. Remove from queue");
-        System.out.println("5. Show Highest Product Priority");
-        System.out.println("6. Meld two queues");
-        System.out.println("7. Exit");
+        for (Option option : Option.values()) {
+            System.out.println(option.ordinal()+1 + " -> " + option);
+        }
     }
 
     private void run() throws IOException {
@@ -48,7 +45,7 @@ public class App {
         Option opt;
         do{
             this.displayMenu();
-            int result = scn.nextInt();
+            int result = scn.nextInt()-1;
             opt = Option.values()[result];
             commands.get(opt).execute();
             System.in.read();

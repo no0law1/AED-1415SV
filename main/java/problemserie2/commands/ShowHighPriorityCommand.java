@@ -17,7 +17,7 @@ public class ShowHighPriorityCommand extends Command implements CommandInterface
     @Override
     public void execute() {
         PriorityQueue<Product> queue = getQueue();
-        if(queue != null){
+        if (queue != null) {
             System.out.println(queue.peek() == null ? "Nothing in queue" : queue.peek());
         } else {
             System.out.println("No Queue");
