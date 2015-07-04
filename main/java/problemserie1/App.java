@@ -44,10 +44,10 @@ public class App {
     }
 
     public void mergeFiles() throws FileNotFoundException{
+        long startTime = System.currentTimeMillis();
         of = new OutputFile(outputFile);
 
         nlines = 0;
-        long startTime = System.currentTimeMillis();
 
         System.out.println("Processing files ... this can take a while");
 
@@ -85,7 +85,7 @@ public class App {
      */
     public static void main(String []args) throws FileNotFoundException{
         if(args.length<=3){
-            throw new IllegalArgumentException("usage: java -Xmx32m juntarFicheiros [ith] [ioutputFile] [inputFile1] [inputFile2] [inputFile3]");
+            throw new IllegalArgumentException("usage: java -Xmx32m juntarFicheiros [ith] [outputFile] [inputFile1] [inputFile2] [inputFile3]");
         }
 
         //TODO: ArrayCopy
