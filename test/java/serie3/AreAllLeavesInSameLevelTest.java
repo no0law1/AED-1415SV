@@ -32,7 +32,7 @@ public class AreAllLeavesInSameLevelTest {
     }
 
     @Test
-     public void testAreAllLeavesInSameLevelFalse(){
+     public void testAreAllLeavesInSameLevelTrueNotPerfect(){
         Node<Integer> path = new Node<>(30);
         path.left = new Node<>(20);
         path.right = new Node<>(40);
@@ -42,7 +42,7 @@ public class AreAllLeavesInSameLevelTest {
 
         path.right.left = new Node<>(37);
 
-        assertFalse(areAllLeavesInSameLevel(path));
+        assertTrue(areAllLeavesInSameLevel(path));
     }
 
     @Test

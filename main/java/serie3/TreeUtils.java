@@ -13,7 +13,7 @@ public class TreeUtils {
         if (root == null) {
             return false;
         }
-        if (accumulator >= sum) {
+        if (accumulator >= sum && root.left == null && root.right == null) {
             return true;
         }
 
@@ -24,46 +24,26 @@ public class TreeUtils {
     private static int leafLevel = 0;
 
     public static boolean areAllLeavesInSameLevel(Node root) {
-        // First Implementation
-        if (false) {
-            if (root == null) {
-                return true;
-            }
-            int left = getHeight(root.left);
-            int right = getHeight(root.right);
-
-            return left - right == 0
-                    && areAllLeavesInSameLevel(root.left)
-                    && areAllLeavesInSameLevel(root.right);
-        }
-        //Second Implementation
-        leafLevel = 0;
-        return areAllLeavesInSameLevelRecursive(root, 0);
-    }
-
-    private static boolean areAllLeavesInSameLevelRecursive(Node root, int accumulator) {
-        if (root == null) {
+        if(root == null){
             return true;
         }
-
-        if (root.left == null ^ root.right == null) {
-            return false;
-        } else if (root.right == null && root.left == null) {
-            if (leafLevel == 0) {
-                leafLevel = accumulator;
-                return true;
-            }
-            return leafLevel == accumulator;
-        }
-
-        return areAllLeavesInSameLevelRecursive(root.left, accumulator + 1)
-                && areAllLeavesInSameLevelRecursive(root.right, accumulator + 1);
+        return areAllLeavesInSameLevelRecursive(root) != -1;
     }
 
-    private static <E> int getHeight(Node<E> root) {
-        if (root == null)
+    private static int areAllLeavesInSameLevelRecursive(Node root) {
+
+        if(root.left == null && root.right == null){
             return 0;
-        return 1 + Math.max(getHeight(root.left), getHeight(root.right));
+        }
+
+        if(root.left == null){
+            return 1+areAllLeavesInSameLevelRecursive(root.right);
+        } else if(root.right == null){
+            return 1+areAllLeavesInSameLevelRecursive(root.left);
+        } else {
+            int left = areAllLeavesInSameLevelRecursive(root.left);
+            return left == areAllLeavesInSameLevelRecursive(root.right) ? left+1 : -1;
+        }
     }
 
     public static Node<Integer> lowestCommonAncestor(Node<Integer> root, Integer n1, Integer n2) {

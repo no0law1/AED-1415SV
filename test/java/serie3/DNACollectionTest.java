@@ -37,4 +37,15 @@ public class DNACollectionTest {
         assertEquals(3, dna.prefixCount("A"));
         assertEquals(1, dna.prefixCount("ACTG"));
     }
+
+    @Test
+    public void testPrefixCountBadFragment() throws Exception {
+        DNACollection dna = new DNACollection();
+        dna.add("ACTG");
+        dna.add("ACG");
+        dna.add("AGTC");
+
+        assertEquals(-1, dna.prefixCount("G"));
+        assertEquals(-1, dna.prefixCount("LOL"));
+    }
 }

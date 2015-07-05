@@ -47,8 +47,10 @@ public class App {
             this.displayMenu();
             int result = scn.nextInt()-1;
             opt = Option.values()[result];
-            commands.get(opt).execute();
-            System.in.read();
+            if(opt != Option.Exit){
+                commands.get(opt).execute();
+                System.in.read();
+            }
         }while(opt != Option.Exit);
     }
 

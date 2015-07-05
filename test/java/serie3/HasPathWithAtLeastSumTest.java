@@ -54,4 +54,13 @@ public class HasPathWithAtLeastSumTest {
 
         assertFalse(hasPathWithAtLeastSum(path, 99));
     }
+
+    @Test
+    public void testHasPathWithAtLeastSumNegative() throws Exception {
+        Node<Integer> path = new Node<>(10);
+        path.left = new Node<>(7);
+        path.left.left = new Node<>(-3);
+
+        assertFalse(hasPathWithAtLeastSum(path, 18));
+    }
 }
