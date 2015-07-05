@@ -97,9 +97,11 @@ public class Graph {
         visited[i] = true;
         for(Edge edge = ((Vertex) alphabetGraph[i]).adjList; edge != null; edge=edge.next){
             int alphaIdx = getAlphabetIndex(edge.adjacent);
-            if(!visited[alphaIdx])
+            if(!visited[alphaIdx]) {
                 topologicalSort(alphaIdx, visited);
+            }
         }
+
         orderedAlphabet.add((Vertex) alphabetGraph[i]);
     }
 
@@ -115,5 +117,17 @@ public class Graph {
         while(it.hasNext()){
             System.out.println((char)it.next().id);
         }
+    }
+
+    public int getOrder(char c) {
+        Iterator<Vertex> it = orderedAlphabet.reverseIterator();
+        int i = 0;
+        while(it.hasNext()){
+            if(c == it.next().id){
+                break;
+            }
+            i++;
+        }
+        return i;
     }
 }

@@ -16,6 +16,25 @@ public class RelativeOrderCommand extends Command implements CommandInterface {
 
     @Override
     public void execute() throws IOException {
-        //TODO
+        System.out.print("First word: ");
+        String firstWord = scn.nextLine();
+        System.out.print("Second word: ");
+        String secondWord = scn.nextLine();
+
+        int firstOrder = -1;
+        int secondOrder = -1;
+        for (int i = 0; i < Math.min(firstWord.length(), secondWord.length()); i++) {
+            if (firstWord.charAt(i) != secondWord.charAt(i)) {
+                firstOrder = graph.getOrder(firstWord.charAt(i));
+                secondOrder = graph.getOrder(secondWord.charAt(i));
+                break;
+            }
+        }
+        if (firstOrder > secondOrder) {
+            String aux = secondWord;
+            secondWord = firstWord;
+            firstWord = aux;
+        }
+        System.out.println("Relative order: " + firstWord + " -> " + secondWord);
     }
 }
