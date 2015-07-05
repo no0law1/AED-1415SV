@@ -5,7 +5,7 @@ import java.util.Iterator;
 /**
  * Created by rcacheira on 04/07/15.
  */
-public class LinkedList<E> {
+public class LinkedList<E> implements Iterable<E>{
     private Node<E> list;
     private int size;
 
@@ -36,6 +36,37 @@ public class LinkedList<E> {
         }
 
         return vertexes;
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new Iterator<E>() {
+            Node<E> aux = list.next;
+            E curr;
+
+            @Override
+            public boolean hasNext() {
+                if(curr != null){
+                    return true;
+                }
+                while(aux.value != null){
+                    curr = aux.value;
+                    aux = aux.next;
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public E next() {
+                if(hasNext()){
+                    E aux = curr;
+                    curr = null;
+                    return aux;
+                }
+                throw new IllegalStateException();
+            }
+        };
     }
 
     public Iterator<E> reverseIterator(){

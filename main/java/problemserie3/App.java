@@ -5,6 +5,8 @@ import problemserie3.commands.AnOrderCommand;
 import problemserie3.commands.RelativeOrderCommand;
 import problemserie3.commands.factory.Command;
 import problemserie3.commands.factory.Option;
+import problemserie3.exceptions.AlphabetExeption;
+import problemserie3.exceptions.UnorderedAlphabetException;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,10 +19,15 @@ public class App {
 
     private HashMap<Option, Command> commands;
 
-    private Graph graph;
+    private AlphabetGraph alphabet;
+    File alphabetFile;
+    File wordsFile;
 
     private App(File alphabetFile, File wordsFile) throws Exception {
-        graph = new Graph(alphabetFile, wordsFile);
+        alphabet = new AlphabetGraph();
+        this.alphabetFile = alphabetFile;
+        this.wordsFile = wordsFile;
+
         createCommands();
     }
 
@@ -29,11 +36,14 @@ public class App {
      */
     private void createCommands() {
         commands = new HashMap<>();
-        commands.put(Option.AnOrder, new AnOrderCommand(graph));
-        commands.put(Option.RelativeOrder, new RelativeOrderCommand(graph));
+        commands.put(Option.AnOrder, new AnOrderCommand(alphabet));
+        commands.put(Option.RelativeOrder, new RelativeOrderCommand(alphabet));
     }
 
-    private void run() throws IOException {
+    private void run() throws IOException, AlphabetExeption {
+        alphabet.readAlphabetFile(alphabetFile);
+        alphabet.readWordsFile(wordsFile);
+
         Scanner scn = new Scanner(System.in);
         Option opt;
         do{
