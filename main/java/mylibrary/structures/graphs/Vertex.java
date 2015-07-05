@@ -11,6 +11,8 @@ public class Vertex {
 
     public Edge adjList;
 
+    public boolean visited;
+
     public Vertex(int id){
         this(id, null);
     }
@@ -18,6 +20,7 @@ public class Vertex {
     public Vertex(int id, Edge adjList){
         this.id = id;
         this.adjList = adjList;
+        visited = false;
     }
 
     public void addEdge(Vertex v){

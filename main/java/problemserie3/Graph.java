@@ -68,48 +68,47 @@ public class Graph {
     private void addEdge(char src, char dst){
         Vertex vertexSrc = null;
         Vertex vertexDst = null;
-        for (int i = 0; i < alphabetGraph.length; i++) {
-            if(src == ((Vertex) alphabetGraph[i]).id){
-                vertexSrc = (Vertex) alphabetGraph[i];
+
+        for (Object o : alphabetGraph) {
+            Vertex v = (Vertex)o;
+            if(src == v.id){
+                vertexSrc = v;
             }
-            if(dst == ((Vertex) alphabetGraph[i]).id){
-                vertexDst = (Vertex) alphabetGraph[i];
+            if(dst == v.id){
+                vertexDst = v;
             }
         }
+
         if(vertexSrc == null || vertexDst == null){
-            throw new IllegalArgumentException("No Character in alphabet");
+            throw new IllegalArgumentException("Any of the characters is not present in alphabet");
         }
         vertexSrc.addEdge(vertexDst);
     }
 
     private void topologicalSort(){
         orderedAlphabet = new LinkedList<>();
-        boolean[] visited = new boolean[alphabetGraph.length];
+        for (Object o : alphabetGraph) {
+            ((Vertex)o).visited = false;
+        }
 
-        for (int i = 0; i< alphabetGraph.length; i++){
-            if(!visited[i]){
-                topologicalSort(i, visited);
+        for (Object o : alphabetGraph) {
+            Vertex v = (Vertex) o;
+            if(!v.visited){
+                topologicalSort(v);
             }
         }
     }
 
-    private void topologicalSort(int i, boolean[] visited){
-        visited[i] = true;
-        for(Edge edge = ((Vertex) alphabetGraph[i]).adjList; edge != null; edge=edge.next){
-            int alphaIdx = getAlphabetIndex(edge.adjacent);
-            if(!visited[alphaIdx]) {
-                topologicalSort(alphaIdx, visited);
+    private void topologicalSort(Vertex v){
+        v.visited = true;
+
+        for(Edge edge = v.adjList; edge != null; edge=edge.next){
+            if(!edge.adjacent.visited) {
+                topologicalSort(edge.adjacent);
             }
         }
 
-        orderedAlphabet.add((Vertex) alphabetGraph[i]);
-    }
-
-    private int getAlphabetIndex(Vertex v){
-        for(int i = 0; i< alphabetGraph.length; i++){
-            if(alphabetGraph[i] == v) return i;
-        }
-        throw new IndexOutOfBoundsException("v not present in alphabetGraph");
+        orderedAlphabet.add(v);
     }
 
     public void printOrderedAlphabet(){
