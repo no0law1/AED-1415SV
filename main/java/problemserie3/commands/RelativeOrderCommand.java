@@ -23,18 +23,21 @@ public class RelativeOrderCommand extends Command implements CommandInterface {
 
         int firstOrder = -1;
         int secondOrder = -1;
-        for (int i = 0; i < Math.min(firstWord.length(), secondWord.length()); i++) {
+        int i = 0;
+        for (; i < Math.min(firstWord.length(), secondWord.length()); i++) {
             if (firstWord.charAt(i) != secondWord.charAt(i)) {
                 firstOrder = graph.getOrder(firstWord.charAt(i));
                 secondOrder = graph.getOrder(secondWord.charAt(i));
                 break;
             }
         }
-        if (firstOrder > secondOrder) {
+        if (firstOrder > secondOrder
+                || (firstOrder == secondOrder && i<Math.max(firstWord.length(), secondWord.length()))) {
             String aux = secondWord;
             secondWord = firstWord;
             firstWord = aux;
         }
+
         System.out.println("Relative order: " + firstWord + " -> " + secondWord);
     }
 }

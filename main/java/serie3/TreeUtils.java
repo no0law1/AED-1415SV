@@ -21,8 +21,6 @@ public class TreeUtils {
                 || hasPathWithAtLeastSumRecursive(root.right, sum, accumulator + root.value);
     }
 
-    private static int leafLevel = 0;
-
     public static boolean areAllLeavesInSameLevel(Node root) {
         if(root == null){
             return true;
@@ -47,12 +45,9 @@ public class TreeUtils {
     }
 
     public static Node<Integer> lowestCommonAncestor(Node<Integer> root, Integer n1, Integer n2) {
-        int min = Math.min(n1, n2);
-        int max = Math.max(n1, n2);
-
-        if (root.value < min && root.value < max) {
+        if (root.value < n1 && root.value < n2) {
             return lowestCommonAncestor(root.right, n1, n2);
-        } else if (root.value > min && root.value > max) {
+        } else if (root.value > n1 && root.value > n2) {
             return lowestCommonAncestor(root.left, n1, n2);
         } else {
             if (containsValue(root, n1) && containsValue(root, n2)) {
