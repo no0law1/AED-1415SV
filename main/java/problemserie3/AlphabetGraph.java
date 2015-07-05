@@ -4,7 +4,7 @@ import mylibrary.structures.LinkedList;
 import mylibrary.structures.graphs.Graph;
 import mylibrary.exception.SortException;
 import mylibrary.structures.graphs.Vertex;
-import problemserie3.exceptions.AlphabetExeption;
+import problemserie3.exceptions.AlphabetException;
 import problemserie3.exceptions.UnorderedAlphabetException;
 
 import java.io.File;
@@ -32,7 +32,7 @@ public class AlphabetGraph extends Graph {
         }
     }
 
-    public void readWordsFile(File wordsFile) throws FileNotFoundException, AlphabetExeption {
+    public void readWordsFile(File wordsFile) throws FileNotFoundException, AlphabetException {
         Scanner scanner = new Scanner(wordsFile);
 
         if(!scanner.hasNextLine()){
@@ -51,7 +51,7 @@ public class AlphabetGraph extends Graph {
                     try {
                         addEdge(firstWord.charAt(i), secondWord.charAt(i));
                     }catch (IllegalArgumentException ex){
-                        throw new AlphabetExeption("Unrecognized characters on words file");
+                        throw new AlphabetException("Unrecognized characters on words file");
                     }
                     break;
                 }
@@ -71,7 +71,7 @@ public class AlphabetGraph extends Graph {
         }
     }
 
-    public int getOrder(char c) throws SortException, AlphabetExeption {
+    public int getOrder(char c) throws SortException, AlphabetException {
         if(order == null){
             order = topologicalSort();
         }
@@ -83,6 +83,6 @@ public class AlphabetGraph extends Graph {
             }
             i++;
         }
-        throw new AlphabetExeption("Any of the characters is not present in alphabet");
+        throw new AlphabetException("Any of the characters is not present in alphabet");
     }
 }

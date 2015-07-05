@@ -1,10 +1,8 @@
 package problemserie3.commands;
 
-import mylibrary.exception.SortException;
 import problemserie2.commands.factory.CommandInterface;
 import problemserie3.commands.factory.Command;
 import problemserie3.AlphabetGraph;
-import problemserie3.exceptions.AlphabetExeption;
 
 import java.io.IOException;
 

@@ -5,23 +5,22 @@ import problemserie3.commands.AnOrderCommand;
 import problemserie3.commands.RelativeOrderCommand;
 import problemserie3.commands.factory.Command;
 import problemserie3.commands.factory.Option;
-import problemserie3.exceptions.AlphabetExeption;
-import problemserie3.exceptions.UnorderedAlphabetException;
+import problemserie3.exceptions.AlphabetException;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
-/**
- *
- */
+
 public class App {
 
     private HashMap<Option, Command> commands;
 
     private AlphabetGraph alphabet;
-    File alphabetFile;
-    File wordsFile;
+
+    private File alphabetFile;
+
+    private File wordsFile;
 
     private App(File alphabetFile, File wordsFile) throws Exception {
         alphabet = new AlphabetGraph();
@@ -40,7 +39,7 @@ public class App {
         commands.put(Option.RelativeOrder, new RelativeOrderCommand(alphabet));
     }
 
-    private void run() throws IOException, AlphabetExeption {
+    private void run() throws IOException, AlphabetException {
         alphabet.readAlphabetFile(alphabetFile);
         alphabet.readWordsFile(wordsFile);
 

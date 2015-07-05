@@ -3,7 +3,7 @@ package problemserie3.exceptions;
 /**
  * Created by rcacheira on 04/07/15.
  */
-public class UnorderedAlphabetException extends AlphabetExeption{
+public class UnorderedAlphabetException extends AlphabetException {
 
     public UnorderedAlphabetException(){
         super();
